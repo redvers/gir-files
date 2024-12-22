@@ -5709,12 +5709,14 @@ in the macro, so you shouldn't use double quotes.</doc>
     </function-macro>
     <constant name="DIR_SEPARATOR" value="47" c:type="G_DIR_SEPARATOR">
       <doc xml:space="preserve">The directory separator character.
-This is '/' on UNIX machines and '\' under Windows.</doc>
+
+This is `'/'` on UNIX machines and `'\'` under Windows.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="DIR_SEPARATOR_S" value="/" c:type="G_DIR_SEPARATOR_S">
       <doc xml:space="preserve">The directory separator as a string.
-This is "/" on UNIX machines and "\" under Windows.</doc>
+
+This is `"/"` on UNIX machines and `"\"` under Windows.</doc>
       <type name="utf8" c:type="gchar*"/>
     </constant>
     <record name="Data" c:type="GData" disguised="1" opaque="1">
@@ -12404,9 +12406,10 @@ in a generic way.</doc>
       </member>
     </enumeration>
     <function-macro name="IS_DIR_SEPARATOR" c:identifier="G_IS_DIR_SEPARATOR" version="2.6" introspectable="0">
-      <doc xml:space="preserve">Checks whether a character is a directory
-separator. It returns %TRUE for '/' on UNIX
-machines and for '\' or '/' under Windows.</doc>
+      <doc xml:space="preserve">Checks whether a character is a directory separator.
+
+It returns true for `'/'` on UNIX machines and for `'\'` or `'/'` under
+Windows.</doc>
       <parameters>
         <parameter name="c">
           <doc xml:space="preserve">a character</doc>
@@ -15101,13 +15104,16 @@ custom log handler functions behave similarly, so that logging calls in user
 code do not need modifying to add a new-line character to the message if the
 log handler is changed.
 
+The `log_domain` parameter can be set to `NULL` or an empty string to use the default
+application domain.
+
 This is not used if structured logging is enabled; see
 [Using Structured Logging](logging.html#using-structured-logging).</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="log_domain" transfer-ownership="none">
+        <parameter name="log_domain" transfer-ownership="none" nullable="1" allow-none="1">
           <doc xml:space="preserve">the log domain of the message</doc>
           <type name="utf8" c:type="const gchar*"/>
         </parameter>
@@ -15253,7 +15259,7 @@ linked against at application run time.</doc>
     <constant name="MAXUINT8" value="255" c:type="G_MAXUINT8">
       <type name="guint8" c:type="guint8"/>
     </constant>
-    <constant name="MICRO_VERSION" value="0" c:type="GLIB_MICRO_VERSION">
+    <constant name="MICRO_VERSION" value="2" c:type="GLIB_MICRO_VERSION">
       <doc xml:space="preserve">The micro version number of the GLib library.
 
 Like #gtk_micro_version, but from the headers used at
@@ -18477,7 +18483,7 @@ the pointer passed to it should not be `volatile`.</doc>
             <type name="gpointer" c:type="void*"/>
           </parameter>
           <parameter name="result" transfer-ownership="none">
-            <doc xml:space="preserve">new non-0 value for *@value_location</doc>
+            <doc xml:space="preserve">new non-0 value for `*value_location`</doc>
             <type name="gsize" c:type="gsize"/>
           </parameter>
         </parameters>
@@ -30592,6 +30598,21 @@ If a thread can not be created (due to resource limits),
           </parameter>
         </parameters>
       </constructor>
+      <method name="get_name" c:identifier="g_thread_get_name" version="2.84">
+        <doc xml:space="preserve">Gets the name of the thread.
+
+This function is intended for debugging purposes.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the name of the thread</doc>
+          <type name="utf8" c:type="const char*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="thread" transfer-ownership="none">
+            <doc xml:space="preserve">a thread</doc>
+            <type name="Thread" c:type="GThread*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="join" c:identifier="g_thread_join">
         <doc xml:space="preserve">Waits until @thread finishes, i.e. the function @func, as
 given to g_thread_new(), returns or g_thread_exit() is called.
@@ -44047,8 +44068,8 @@ See your C library manual for more details about chmod().</doc>
       </parameters>
     </function-macro>
     <function name="clear_error" c:identifier="g_clear_error" throws="1">
-      <doc xml:space="preserve">If @err or *@err is %NULL, does nothing. Otherwise,
-calls g_error_free() on *@err and sets *@err to %NULL.</doc>
+      <doc xml:space="preserve">If @err or `*err` is %NULL, does nothing. Otherwise,
+calls g_error_free() on `*err` and sets `*err` to %NULL.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -49267,6 +49288,9 @@ you want to set a handler for this log level you must combine it with
 This has no effect if structured logging is enabled; see
 [Using Structured Logging](logging.html#using-structured-logging).
 
+The `log_domain` parameter can be set to `NULL` or an empty string to use the default
+application domain.
+
 Here is an example for adding a log handler for all warning messages
 in the default domain:
 
@@ -49294,7 +49318,7 @@ g_log_set_handler ("GLib", G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL
       </return-value>
       <parameters>
         <parameter name="log_domain" transfer-ownership="none" nullable="1" allow-none="1">
-          <doc xml:space="preserve">the log domain, or `NULL` for the default `""`
+          <doc xml:space="preserve">the log domain
    application domain</doc>
           <type name="utf8" c:type="const gchar*"/>
         </parameter>
@@ -49319,14 +49343,17 @@ g_log_set_handler ("GLib", G_LOG_LEVEL_MASK | G_LOG_FLAG_FATAL
       <doc xml:space="preserve">Like [func@GLib.log_set_handler], but takes a destroy notify for the @user_data.
 
 This has no effect if structured logging is enabled; see
-[Using Structured Logging](logging.html#using-structured-logging).</doc>
+[Using Structured Logging](logging.html#using-structured-logging).
+
+The `log_domain` parameter can be set to `NULL` or an empty string to use the default
+application domain.</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve">the ID of the new handler</doc>
         <type name="guint" c:type="guint"/>
       </return-value>
       <parameters>
         <parameter name="log_domain" transfer-ownership="none" nullable="1" allow-none="1">
-          <doc xml:space="preserve">the log domain, or `NULL` for the default `""`
+          <doc xml:space="preserve">the log domain
   application domain</doc>
           <type name="utf8" c:type="const gchar*"/>
         </parameter>
@@ -49946,13 +49973,16 @@ character will automatically be appended to @..., and need not be entered
 manually.
 
 If [structured logging is enabled](logging.html#using-structured-logging) this will
-output via the structured log writer function (see [func@GLib.log_set_writer_func]).</doc>
+output via the structured log writer function (see [func@GLib.log_set_writer_func]).
+
+The `log_domain` parameter can be set to `NULL` or an empty string to use the default
+application domain.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
         <parameter name="log_domain" transfer-ownership="none" nullable="1" allow-none="1">
-          <doc xml:space="preserve">the log domain, or `NULL` for the default `""`
+          <doc xml:space="preserve">the log domain
   application domain</doc>
           <type name="utf8" c:type="const gchar*"/>
         </parameter>
@@ -51232,7 +51262,7 @@ the pointer passed to it should not be `volatile`.</doc>
           <type name="gpointer" c:type="void*"/>
         </parameter>
         <parameter name="result" transfer-ownership="none">
-          <doc xml:space="preserve">new non-0 value for *@value_location</doc>
+          <doc xml:space="preserve">new non-0 value for `*value_location`</doc>
           <type name="gsize" c:type="gsize"/>
         </parameter>
       </parameters>
@@ -51758,7 +51788,7 @@ if the call was interrupted.</doc>
 error message. If @err is %NULL (ie: no error variable) then do
 nothing.
 
-If *@err is %NULL (ie: an error variable is present but there is no
+If `*err` is %NULL (ie: an error variable is present but there is no
 error condition) then also do nothing.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -51779,7 +51809,7 @@ error condition) then also do nothing.</doc>
       </parameters>
     </function>
     <function name="prefix_error_literal" c:identifier="g_prefix_error_literal" version="2.70">
-      <doc xml:space="preserve">Prefixes @prefix to an existing error message. If @err or *@err is
+      <doc xml:space="preserve">Prefixes @prefix to an existing error message. If @err or `*err` is
 %NULL (i.e.: no error variable) then do nothing.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -51912,7 +51942,7 @@ placeholders in any case, as their behaviour is locale-dependent.</doc>
       </parameters>
     </function>
     <function name="propagate_error" c:identifier="g_propagate_error">
-      <doc xml:space="preserve">If @dest is %NULL, free @src; otherwise, moves @src into *@dest.
+      <doc xml:space="preserve">If @dest is %NULL, free @src; otherwise, moves @src into `*dest`.
 The error variable @dest points to must be %NULL.
 
 @src must be non-%NULL.
@@ -51935,8 +51965,8 @@ after calling this function on it.</doc>
       </parameters>
     </function>
     <function name="propagate_prefixed_error" c:identifier="g_propagate_prefixed_error" version="2.16" introspectable="0">
-      <doc xml:space="preserve">If @dest is %NULL, free @src; otherwise, moves @src into *@dest.
-*@dest must be %NULL. After the move, add a prefix as with
+      <doc xml:space="preserve">If @dest is %NULL, free @src; otherwise, moves @src into `*dest`.
+`*dest` must be %NULL. After the move, add a prefix as with
 g_prefix_error().</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -53425,8 +53455,8 @@ or when displaying an application's name in the task list.</doc>
       </parameters>
     </function>
     <function name="set_error" c:identifier="g_set_error" introspectable="0">
-      <doc xml:space="preserve">Does nothing if @err is %NULL; if @err is non-%NULL, then *@err
-must be %NULL. A new #GError is created and assigned to *@err.</doc>
+      <doc xml:space="preserve">Does nothing if @err is %NULL; if @err is non-%NULL, then `*err`
+must be %NULL. A new #GError is created and assigned to `*err`.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -53454,8 +53484,8 @@ must be %NULL. A new #GError is created and assigned to *@err.</doc>
       </parameters>
     </function>
     <function name="set_error_literal" c:identifier="g_set_error_literal" version="2.18">
-      <doc xml:space="preserve">Does nothing if @err is %NULL; if @err is non-%NULL, then *@err
-must be %NULL. A new #GError is created and assigned to *@err.
+      <doc xml:space="preserve">Does nothing if @err is %NULL; if @err is non-%NULL, then `*err`
+must be %NULL. A new #GError is created and assigned to `*err`.
 Unlike g_set_error(), @message is not a printf()-style format string.
 Use this function if @message contains text you don't have control over,
 that could include printf() escape sequences.</doc>
@@ -56331,10 +56361,6 @@ Elements are compared using [func@GLib.str_equal]. To match independently
 of order, sort the arrays first (using [func@GLib.qsort_with_data]
 or similar).
 
-Elements are compared using [func@GLib.str_equal]. To match independently
-of order, sort the arrays first (using [func@GLib.qsort_with_data]
-or similar).
-
 Two empty arrays are considered equal. Neither @strv1 nor @strv2 may be
 `NULL`.</doc>
       <return-value transfer-ownership="none">
@@ -58872,10 +58898,10 @@ This function does not include compatibility
 decompositions. It does, however, include algorithmic
 Hangul Jamo decomposition, as well as 'singleton'
 decompositions which replace a character by a single
-other character. In the case of singletons *@b will
+other character. In the case of singletons `*b` will
 be set to zero.
 
-If @ch is not decomposable, *@a is set to @ch and *@b
+If @ch is not decomposable, `*a` is set to @ch and `*b`
 is set to zero.
 
 Note that the way Unicode decomposition pairs are
