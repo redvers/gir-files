@@ -2,7 +2,7 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="GdkPixbuf" version="2.0"/>
   <include name="Gio" version="2.0"/>
   <include name="Pango" version="1.0"/>
@@ -10,6 +10,7 @@ and/or use gtk-doc annotations.  -->
   <include name="cairo" version="1.0"/>
   <package name="gtk4"/>
   <c:include name="gdk/gdk.h"/>
+  <doc:format name="gi-docgen"/>
   <namespace name="Gdk" version="4.0" shared-library="libgtk-4.so.1" c:identifier-prefixes="Gdk" c:symbol-prefixes="gdk">
     <constant name="ACTION_ALL" value="7" c:type="GDK_ACTION_ALL">
       <doc xml:space="preserve">Defines all possible DND actions.
@@ -69,7 +70,7 @@ sliding, which should take precedence over resizing.</doc>
       </member>
     </bitfield>
     <class name="AppLaunchContext" c:symbol-prefix="app_launch_context" c:type="GdkAppLaunchContext" parent="Gio.AppLaunchContext" glib:type-name="GdkAppLaunchContext" glib:get-type="gdk_app_launch_context_get_type">
-      <doc xml:space="preserve">`GdkAppLaunchContext` handles launching an application in a graphical context.
+      <doc xml:space="preserve">Handles launching an application in a graphical context.
 
 It is an implementation of `GAppLaunchContext` that provides startup
 notification and allows to launch applications on a specific workspace.
@@ -369,13 +370,12 @@ left button in a left-handed setup.</doc>
       </parameters>
     </function-macro>
     <class name="CairoContext" c:symbol-prefix="cairo_context" c:type="GdkCairoContext" parent="DrawContext" abstract="1" glib:type-name="GdkCairoContext" glib:get-type="gdk_cairo_context_get_type">
-      <doc xml:space="preserve">`GdkCairoContext` is an object representing the platform-specific
-draw context.
+      <doc xml:space="preserve">Represents the platform-specific draw context.
 
 `GdkCairoContext`s are created for a surface using
 [method@Gdk.Surface.create_cairo_context], and the context
 can then be used to draw on that surface.</doc>
-      <method name="cairo_create" c:identifier="gdk_cairo_context_cairo_create">
+      <method name="cairo_create" c:identifier="gdk_cairo_context_cairo_create" deprecated="1" deprecated-version="4.18">
         <doc xml:space="preserve">Retrieves a Cairo context to be used to draw on the `GdkSurface`
 of @context.
 
@@ -384,6 +384,8 @@ A call to [method@Gdk.DrawContext.begin_frame] with this
 
 The returned context is guaranteed to be valid until
 [method@Gdk.DrawContext.end_frame] is called.</doc>
+        <doc-deprecated xml:space="preserve">Drawing content with Cairo should be done via
+  Cairo rendernodes, not by using renderers.</doc-deprecated>
         <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a Cairo context
   to draw on `GdkSurface</doc>
@@ -398,8 +400,9 @@ The returned context is guaranteed to be valid until
       </method>
     </class>
     <class name="CicpParams" c:symbol-prefix="cicp_params" c:type="GdkCicpParams" version="4.16" parent="GObject.Object" glib:type-name="GdkCicpParams" glib:get-type="gdk_cicp_params_get_type" glib:type-struct="CicpParamsClass">
-      <doc xml:space="preserve">The `GdkCicpParams` struct contains the parameters that define
-a colorstate according to the ITU-T H.273
+      <doc xml:space="preserve">Contains the parameters that define a colorstate with cicp parameters.
+
+Cicp parameters are specified in the ITU-T H.273
 [specification](https://www.itu.int/rec/T-REC-H.273/en).
 
 See the documentation of individual properties for supported values.
@@ -579,7 +582,10 @@ Supported values:
 Supported values:
 
 - 0: RGB
-- 2: unspecified</doc>
+- 1: BT.709
+- 2: unspecified
+- 5,6: BT.601
+- 9: BT.2020</doc>
         <type name="guint" c:type="guint"/>
       </property>
       <property name="range" version="4.16" writable="1" transfer-ownership="none" setter="set_range" getter="get_range" default-value="GDK_CICP_RANGE_NARROW">
@@ -620,8 +626,7 @@ are 16-235 for Y and 16-240 for u,v (when dealing with YUV data).</doc>
       </member>
     </enumeration>
     <class name="Clipboard" c:symbol-prefix="clipboard" c:type="GdkClipboard" parent="GObject.Object" glib:type-name="GdkClipboard" glib:get-type="gdk_clipboard_get_type">
-      <doc xml:space="preserve">The `GdkClipboard` object represents data shared between applications or
-inside an application.
+      <doc xml:space="preserve">Represents data shared between applications or inside an application.
 
 To get a `GdkClipboard` object, use [method@Gdk.Display.get_clipboard] or
 [method@Gdk.Display.get_primary_clipboard]. You can find out about the data
@@ -1121,8 +1126,7 @@ provided otherwise.</doc>
       </glib:signal>
     </class>
     <record name="ColorState" c:type="GdkColorState" opaque="1" version="4.16" glib:type-name="GdkColorState" glib:get-type="gdk_color_state_get_type" c:symbol-prefix="color_state">
-      <doc xml:space="preserve">A `GdkColorState` object provides the information to interpret
-colors and pixels in a variety of ways.
+      <doc xml:space="preserve">Provides information to interpret colors and pixels in a variety of ways.
 
 They are also known as
 [*color spaces*](https://en.wikipedia.org/wiki/Color_space).
@@ -1156,6 +1160,26 @@ describing the same color state may compare not equal. However, different
 color states will never compare equal.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if the two color states compare equal</doc>
+          <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">a `GdkColorState`</doc>
+            <type name="ColorState" c:type="GdkColorState*"/>
+          </instance-parameter>
+          <parameter name="other" transfer-ownership="none">
+            <doc xml:space="preserve">another `GdkColorStatee`</doc>
+            <type name="ColorState" c:type="GdkColorState*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="equivalent" c:identifier="gdk_color_state_equivalent" version="4.20">
+        <doc xml:space="preserve">Compares two `GdkColorStates` for equivalence.
+
+Two objects that represent the same color state should be equivalent,
+even though they may not be equal in the sense of [method@Gdk.ColorState.equal].</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">%TRUE if the two color states are equivalent</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
@@ -1293,8 +1317,7 @@ operation.</doc>
       </parameters>
     </callback>
     <class name="ContentDeserializer" c:symbol-prefix="content_deserializer" c:type="GdkContentDeserializer" parent="GObject.Object" glib:type-name="GdkContentDeserializer" glib:get-type="gdk_content_deserializer_get_type">
-      <doc xml:space="preserve">A `GdkContentDeserializer` is used to deserialize content received via
-inter-application data transfers.
+      <doc xml:space="preserve">Deserializes content received via inter-application data transfers.
 
 The `GdkContentDeserializer` transforms serialized content that is
 identified by a mime type into an object identified by a GType.
@@ -1469,8 +1492,7 @@ This function consumes @error.</doc>
       </method>
     </class>
     <record name="ContentFormats" c:type="GdkContentFormats" opaque="1" glib:type-name="GdkContentFormats" glib:get-type="gdk_content_formats_get_type" c:symbol-prefix="content_formats">
-      <doc xml:space="preserve">The `GdkContentFormats` structure is used to advertise and negotiate the
-format of content.
+      <doc xml:space="preserve">Used to advertise and negotiate the format of content.
 
 You will encounter `GdkContentFormats` when interacting with objects
 controlling operations that pass data between different widgets, window
@@ -1851,6 +1873,7 @@ is returned.</doc>
       </function>
     </record>
     <record name="ContentFormatsBuilder" c:type="GdkContentFormatsBuilder" opaque="1" glib:type-name="GdkContentFormatsBuilder" glib:get-type="gdk_content_formats_builder_get_type" c:symbol-prefix="content_formats_builder">
+      <doc xml:space="preserve">Creates `GdkContentFormats` objects.</doc>
       <constructor name="new" c:identifier="gdk_content_formats_builder_new">
         <doc xml:space="preserve">Create a new `GdkContentFormatsBuilder` object.
 
@@ -1976,8 +1999,8 @@ This function is intended primarily for bindings. C code should use
       </method>
     </record>
     <class name="ContentProvider" c:symbol-prefix="content_provider" c:type="GdkContentProvider" parent="GObject.Object" glib:type-name="GdkContentProvider" glib:get-type="gdk_content_provider_get_type" glib:type-struct="ContentProviderClass">
-      <doc xml:space="preserve">A `GdkContentProvider` is used to provide content for the clipboard or
-for drag-and-drop operations in a number of formats.
+      <doc xml:space="preserve">Provides content for the clipboard or for drag-and-drop operations
+in a number of formats.
 
 To create a `GdkContentProvider`, use [ctor@Gdk.ContentProvider.new_for_value]
 or [ctor@Gdk.ContentProvider.new_for_bytes].
@@ -2550,8 +2573,7 @@ operation.</doc>
       </parameters>
     </callback>
     <class name="ContentSerializer" c:symbol-prefix="content_serializer" c:type="GdkContentSerializer" parent="GObject.Object" glib:type-name="GdkContentSerializer" glib:get-type="gdk_content_serializer_get_type">
-      <doc xml:space="preserve">A `GdkContentSerializer` is used to serialize content for
-inter-application data transfers.
+      <doc xml:space="preserve">Serializes content for inter-application data transfers.
 
 The `GdkContentSerializer` transforms an object that is identified
 by a GType into a serialized form (i.e. a byte stream) that is
@@ -2804,7 +2826,7 @@ This function consumes @error.</doc>
       </member>
     </enumeration>
     <class name="Cursor" c:symbol-prefix="cursor" c:type="GdkCursor" parent="GObject.Object" glib:type-name="GdkCursor" glib:get-type="gdk_cursor_get_type">
-      <doc xml:space="preserve">`GdkCursor` is used to create and destroy cursors.
+      <doc xml:space="preserve">Used to create and destroy cursors.
 
 Cursors are immutable objects, so once you created them, there is no way
 to modify them later. You should create a new cursor when you want to change
@@ -2874,17 +2896,45 @@ theme.
 A recommended set of cursor names that will work across different
 platforms can be found in the CSS specification:
 
-| | | | |
-| --- | --- | ---- | --- |
-| "none" | ![](default_cursor.png) "default" | ![](help_cursor.png) "help" | ![](pointer_cursor.png) "pointer" |
-| ![](context_menu_cursor.png) "context-menu" | ![](progress_cursor.png) "progress" | ![](wait_cursor.png) "wait" | ![](cell_cursor.png) "cell" |
-| ![](crosshair_cursor.png) "crosshair" | ![](text_cursor.png) "text" | ![](vertical_text_cursor.png) "vertical-text" | ![](alias_cursor.png) "alias" |
-| ![](copy_cursor.png) "copy" | ![](no_drop_cursor.png) "no-drop" | ![](move_cursor.png) "move" | ![](not_allowed_cursor.png) "not-allowed" |
-| ![](grab_cursor.png) "grab" | ![](grabbing_cursor.png) "grabbing" | ![](all_scroll_cursor.png) "all-scroll" | ![](col_resize_cursor.png) "col-resize" |
-| ![](row_resize_cursor.png) "row-resize" | ![](n_resize_cursor.png) "n-resize" | ![](e_resize_cursor.png) "e-resize" | ![](s_resize_cursor.png) "s-resize" |
-| ![](w_resize_cursor.png) "w-resize" | ![](ne_resize_cursor.png) "ne-resize" | ![](nw_resize_cursor.png) "nw-resize" | ![](sw_resize_cursor.png) "sw-resize" |
-| ![](se_resize_cursor.png) "se-resize" | ![](ew_resize_cursor.png) "ew-resize" | ![](ns_resize_cursor.png) "ns-resize" | ![](nesw_resize_cursor.png) "nesw-resize" |
-| ![](nwse_resize_cursor.png) "nwse-resize" | ![](zoom_in_cursor.png) "zoom-in" | ![](zoom_out_cursor.png) "zoom-out" | |</doc>
+| | | |
+| --- | --- | --- |
+|                               | "none"          | No cursor |
+| ![](default_cursor.png)       | "default"       | The default cursor |
+| ![](help_cursor.png)          | "help"          | Help is available |
+| ![](pointer_cursor.png)       | "pointer"       | Indicates a link or interactive element |
+| ![](context_menu_cursor.png)  |"context-menu"   | A context menu is available |
+| ![](progress_cursor.png)      | "progress"      | Progress indicator |
+| ![](wait_cursor.png)          | "wait"          | Busy cursor |
+| ![](cell_cursor.png)          | "cell"          | Cell(s) may be selected |
+| ![](crosshair_cursor.png)     | "crosshair"     | Simple crosshair |
+| ![](text_cursor.png)          | "text"          | Text may be selected |
+| ![](vertical_text_cursor.png) | "vertical-text" | Vertical text may be selected |
+| ![](alias_cursor.png)         | "alias"         | DND: Something will be linked |
+| ![](copy_cursor.png)          | "copy"          | DND: Something will be copied |
+| ![](move_cursor.png)          | "move"          | DND: Something will be moved |
+| ![](dnd_ask_cursor.png)       | "dnd-ask"       | DND: User can choose action to be carried out |
+| ![](no_drop_cursor.png)       | "no-drop"       | DND: Can't drop here |
+| ![](not_allowed_cursor.png)   | "not-allowed"   | DND: Action will not be carried out |
+| ![](grab_cursor.png)          | "grab"          | DND: Something can be grabbed |
+| ![](grabbing_cursor.png)      | "grabbing"      | DND: Something is being grabbed |
+| ![](n_resize_cursor.png)      | "n-resize"      | Resizing: Move north border |
+| ![](e_resize_cursor.png)      | "e-resize"      | Resizing: Move east border |
+| ![](s_resize_cursor.png)      | "s-resize"      | Resizing: Move south border |
+| ![](w_resize_cursor.png)      | "w-resize"      | Resizing: Move west border |
+| ![](ne_resize_cursor.png)     | "ne-resize"     | Resizing: Move north-east corner |
+| ![](nw_resize_cursor.png)     | "nw-resize"     | Resizing: Move north-west corner |
+| ![](sw_resize_cursor.png)     | "sw-resize"     | Resizing: Move south-west corner |
+| ![](se_resize_cursor.png)     | "se-resize"     | Resizing: Move south-east corner |
+| ![](col_resize_cursor.png)    | "col-resize"    | Resizing: Move an item or border horizontally |
+| ![](row_resize_cursor.png)    | "row-resize"    | Resizing: Move an item or border vertically |
+| ![](ew_resize_cursor.png)     | "ew-resize"     | Moving: Something can be moved horizontally |
+| ![](ns_resize_cursor.png)     | "ns-resize"     | Moving: Something can be moved vertically |
+| ![](nesw_resize_cursor.png)   | "nesw-resize"   | Moving: Something can be moved diagonally, north-east to south-west |
+| ![](nwse_resize_cursor.png)   | "nwse-resize"   | Moving: something can be moved diagonally, north-west to south-east |
+| ![](all_resize_cursor.png)    | "all-resize"    | Moving: Something can be moved in any direction |
+| ![](all_scroll_cursor.png)    | "all-scroll"    | Can scroll in any direction |
+| ![](zoom_in_cursor.png)       | "zoom-in"       | Zoom in |
+| ![](zoom_out_cursor.png)      | "zoom-out"      | Zoom out |</doc>
         <return-value transfer-ownership="full" nullable="1">
           <doc xml:space="preserve">a new `GdkCursor`, or %NULL if there is no
   cursor with the given name</doc>
@@ -3188,11 +3238,28 @@ the fallback cursor will be used.</doc>
       <doc xml:space="preserve">An event related to closing a top-level surface.</doc>
     </class>
     <class name="Device" c:symbol-prefix="device" c:type="GdkDevice" parent="GObject.Object" abstract="1" glib:type-name="GdkDevice" glib:get-type="gdk_device_get_type">
-      <doc xml:space="preserve">The `GdkDevice` object represents an input device, such
-as a keyboard, a mouse, or a touchpad.
+      <doc xml:space="preserve">Represents an input device, such as a keyboard, mouse or touchpad.
 
 See the [class@Gdk.Seat] documentation for more information
 about the various kinds of devices, and their relationships.</doc>
+      <method name="get_active_layout_index" c:identifier="gdk_device_get_active_layout_index" glib:get-property="active-layout-index" version="4.18">
+        <doc xml:space="preserve">Retrieves the index of the active layout of the keyboard.
+
+If there is no valid active layout for the `GdkDevice`, this function will
+return -1;
+
+This is only relevant for keyboard devices.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The layout index of the active layout or -1.</doc>
+          <type name="gint" c:type="gint"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="device" transfer-ownership="none">
+            <doc xml:space="preserve">a `GdkDevice`</doc>
+            <type name="Device" c:type="GdkDevice*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_caps_lock_state" c:identifier="gdk_device_get_caps_lock_state" glib:get-property="caps-lock-state">
         <doc xml:space="preserve">Retrieves whether the Caps Lock modifier of the keyboard is locked.
 
@@ -3262,6 +3329,24 @@ don't have a pointer.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if the pointer follows device motion</doc>
           <type name="gboolean" c:type="gboolean"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="device" transfer-ownership="none">
+            <doc xml:space="preserve">a `GdkDevice`</doc>
+            <type name="Device" c:type="GdkDevice*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_layout_names" c:identifier="gdk_device_get_layout_names" glib:get-property="layout-names" version="4.18">
+        <doc xml:space="preserve">Retrieves the names of the layouts of the keyboard.
+
+This is only relevant for keyboard devices.</doc>
+        <return-value transfer-ownership="full" nullable="1">
+          <doc xml:space="preserve">
+  %NULL-terminated array of strings of layouts,</doc>
+          <array c:type="gchar**">
+            <type name="utf8"/>
+          </array>
         </return-value>
         <parameters>
           <instance-parameter name="device" transfer-ownership="none">
@@ -3484,6 +3569,14 @@ This is only relevant for keyboard devices.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <property name="active-layout-index" version="4.18" transfer-ownership="none" getter="get_active_layout_index" default-value="0">
+        <doc xml:space="preserve">The index of the keyboard active layout of a `GdkDevice`.
+
+Will be -1 if there is no valid active layout.
+
+This is only relevant for keyboard devices.</doc>
+        <type name="gint" c:type="gint"/>
+      </property>
       <property name="caps-lock-state" transfer-ownership="none" getter="get_caps_lock_state" default-value="FALSE">
         <doc xml:space="preserve">Whether Caps Lock is on.
 
@@ -3509,6 +3602,14 @@ This is only relevant for keyboard devices.</doc>
       <property name="has-cursor" writable="1" construct-only="1" transfer-ownership="none" getter="get_has_cursor" default-value="FALSE">
         <doc xml:space="preserve">Whether the device is represented by a cursor on the screen.</doc>
         <type name="gboolean" c:type="gboolean"/>
+      </property>
+      <property name="layout-names" version="4.18" transfer-ownership="none" getter="get_layout_names">
+        <doc xml:space="preserve">The names of the keyboard layouts of a `GdkDevice`.
+
+This is only relevant for keyboard devices.</doc>
+        <array>
+          <type name="utf8"/>
+        </array>
       </property>
       <property name="modifier-state" transfer-ownership="none" getter="get_modifier_state" default-value="GDK_NO_MODIFIER_MASK">
         <doc xml:space="preserve">The current modifier state of the device.
@@ -3593,8 +3694,7 @@ and keys on the new physical device.</doc>
       </glib:signal>
     </class>
     <interface name="DevicePad" c:symbol-prefix="device_pad" c:type="GdkDevicePad" glib:type-name="GdkDevicePad" glib:get-type="gdk_device_pad_get_type" glib:type-struct="DevicePadInterface">
-      <doc xml:space="preserve">`GdkDevicePad` is an interface implemented by devices of type
-%GDK_SOURCE_TABLET_PAD
+      <doc xml:space="preserve">An interface for tablet pad devices.
 
 It allows querying the features provided by the pad device.
 
@@ -3814,7 +3914,7 @@ airbrush, pencil, etc.</doc>
       </member>
     </enumeration>
     <class name="Display" c:symbol-prefix="display" c:type="GdkDisplay" parent="GObject.Object" glib:type-name="GdkDisplay" glib:get-type="gdk_display_get_type">
-      <doc xml:space="preserve">`GdkDisplay` objects are the GDK representation of a workstation.
+      <doc xml:space="preserve">A representation of a workstation.
 
 Their purpose are two-fold:
 
@@ -4531,8 +4631,9 @@ virtualized test environments.</doc>
       </glib:signal>
     </class>
     <class name="DisplayManager" c:symbol-prefix="display_manager" c:type="GdkDisplayManager" parent="GObject.Object" glib:type-name="GdkDisplayManager" glib:get-type="gdk_display_manager_get_type">
-      <doc xml:space="preserve">A singleton object that offers notification when displays appear or
-disappear.
+      <doc xml:space="preserve">Offers notification when displays appear or disappear.
+
+`GdkDisplayManager` is a singleton object.
 
 You can use [func@Gdk.DisplayManager.get] to obtain the `GdkDisplayManager`
 singleton, but that should be rarely necessary. Typically, initializing
@@ -4690,8 +4791,7 @@ backends will be used.</doc>
       </function>
     </enumeration>
     <record name="DmabufFormats" c:type="GdkDmabufFormats" opaque="1" version="4.14" glib:type-name="GdkDmabufFormats" glib:get-type="gdk_dmabuf_formats_get_type" c:symbol-prefix="dmabuf_formats">
-      <doc xml:space="preserve">The `GdkDmabufFormats` struct provides information about
-supported DMA buffer formats.
+      <doc xml:space="preserve">Provides information about supported DMA buffer formats.
 
 You can query whether a given format is supported with
 [method@Gdk.DmabufFormats.contains] and you can iterate
@@ -4834,8 +4934,7 @@ Dma-buf textures can only be created on Linux.</doc>
       <implements name="Gio.LoadableIcon"/>
     </class>
     <class name="DmabufTextureBuilder" c:symbol-prefix="dmabuf_texture_builder" c:type="GdkDmabufTextureBuilder" version="4.14" parent="GObject.Object" glib:type-name="GdkDmabufTextureBuilder" glib:get-type="gdk_dmabuf_texture_builder_get_type" glib:type-struct="DmabufTextureBuilderClass">
-      <doc xml:space="preserve">`GdkDmabufTextureBuilder` is a builder used to construct [class@Gdk.Texture]
-objects from DMA buffers.
+      <doc xml:space="preserve">Constructs [class@Gdk.Texture] objects from DMA buffers.
 
 DMA buffers are commonly called **_dma-bufs_**.
 
@@ -5425,7 +5524,7 @@ Only relevant if the format has alpha.</doc>
     <record name="DmabufTextureBuilderClass" c:type="GdkDmabufTextureBuilderClass" disguised="1" opaque="1" glib:is-gtype-struct-for="DmabufTextureBuilder"/>
     <record name="DmabufTextureClass" c:type="GdkDmabufTextureClass" disguised="1" opaque="1" glib:is-gtype-struct-for="DmabufTexture"/>
     <class name="Drag" c:symbol-prefix="drag" c:type="GdkDrag" parent="GObject.Object" abstract="1" glib:type-name="GdkDrag" glib:get-type="gdk_drag_get_type">
-      <doc xml:space="preserve">The `GdkDrag` object represents the source of an ongoing DND operation.
+      <doc xml:space="preserve">Represents the source of an ongoing DND operation.
 
 A `GdkDrag` is created when a drag is started, and stays alive for duration of
 the DND operation. After a drag has been started with [func@Gdk.Drag.begin],
@@ -5744,7 +5843,7 @@ is returned.</doc>
       </member>
     </enumeration>
     <interface name="DragSurface" c:symbol-prefix="drag_surface" c:type="GdkDragSurface" glib:type-name="GdkDragSurface" glib:get-type="gdk_drag_surface_get_type" glib:type-struct="DragSurfaceInterface">
-      <doc xml:space="preserve">A `GdkDragSurface` is an interface for surfaces used during DND.</doc>
+      <doc xml:space="preserve">A surface that is used during DND.</doc>
       <prerequisite name="Surface"/>
       <method name="present" c:identifier="gdk_drag_surface_present">
         <doc xml:space="preserve">Present @drag_surface.</doc>
@@ -5796,8 +5895,7 @@ a result.</doc>
       <doc xml:space="preserve">The `GdkDragSurfaceInterface` implementation is private to GDK.</doc>
     </record>
     <record name="DragSurfaceSize" c:type="GdkDragSurfaceSize" disguised="1" opaque="1" version="4.12" glib:type-name="GdkDragSurfaceSize" glib:get-type="gdk_drag_surface_size_get_type" c:symbol-prefix="drag_surface_size">
-      <doc xml:space="preserve">The `GdkDragSurfaceSize` struct contains information that is useful
-to compute the size of a drag surface.</doc>
+      <doc xml:space="preserve">Contains information that is useful to compute the size of a drag surface.</doc>
       <method name="set_size" c:identifier="gdk_drag_surface_size_set_size" version="4.12">
         <doc xml:space="preserve">Sets the size the drag surface prefers to be resized to.</doc>
         <return-value transfer-ownership="none">
@@ -5970,11 +6068,11 @@ may be effecting the contents of the @context's surface.</doc>
       </property>
     </class>
     <class name="Drop" c:symbol-prefix="drop" c:type="GdkDrop" parent="GObject.Object" abstract="1" glib:type-name="GdkDrop" glib:get-type="gdk_drop_get_type">
-      <doc xml:space="preserve">The `GdkDrop` object represents the target of an ongoing DND operation.
+      <doc xml:space="preserve">Represents the target of an ongoing DND operation.
 
 Possible drop sites get informed about the status of the ongoing drag
-operation with events of type %GDK_DRAG_ENTER, %GDK_DRAG_LEAVE,
-%GDK_DRAG_MOTION and %GDK_DROP_START. The `GdkDrop` object can be obtained
+operation with events of type `GDK_DRAG_ENTER`, `GDK_DRAG_LEAVE`,
+`GDK_DRAG_MOTION` and `GDK_DROP_START`. The `GdkDrop` object can be obtained
 from these [class@Gdk.Event] types using [method@Gdk.DNDEvent.get_drop].
 
 The actual data transfer is initiated from the target side via an async
@@ -6007,11 +6105,11 @@ available via [method@Gdk.Drop.get_actions].</doc>
         <doc xml:space="preserve">Returns the possible actions for this `GdkDrop`.
 
 If this value contains multiple actions - i.e.
-[func@Gdk.DragAction.is_unique] returns %FALSE for the result -
+[func@Gdk.DragAction.is_unique] returns false for the result -
 [method@Gdk.Drop.finish] must choose the action to use when
 accepting the drop. This will only happen if you passed
-%GDK_ACTION_ASK as one of the possible actions in
-[method@Gdk.Drop.status]. %GDK_ACTION_ASK itself will not
+`GDK_ACTION_ASK` as one of the possible actions in
+[method@Gdk.Drop.status]. `GDK_ACTION_ASK` itself will not
 be included in the actions returned by this function.
 
 This value may change over the lifetime of the [class@Gdk.Drop]
@@ -6059,7 +6157,7 @@ side will not change this value anymore once a drop has started.</doc>
         <doc xml:space="preserve">If this is an in-app drag-and-drop operation, returns the `GdkDrag`
 that corresponds to this drop.
 
-If it is not, %NULL is returned.</doc>
+If it is not, `NULL` is returned.</doc>
         <return-value transfer-ownership="none" nullable="1">
           <doc xml:space="preserve">the corresponding `GdkDrag`</doc>
           <type name="Drag" c:type="GdkDrag*"/>
@@ -6230,7 +6328,7 @@ The @preferred action is a hint to the drag-and-drop mechanism about which
 action to use when multiple actions are possible.
 
 This function should be called by drag destinations in response to
-%GDK_DRAG_ENTER or %GDK_DRAG_MOTION events. If the destination does
+`GDK_DRAG_ENTER` or `GDK_DRAG_MOTION` events. If the destination does
 not yet know the exact actions it supports, it should set any possible
 actions first and then later call this function again.</doc>
         <return-value transfer-ownership="none">
@@ -6295,12 +6393,13 @@ an event handler.</doc>
       <type name="gboolean" c:type="gboolean"/>
     </constant>
     <class name="Event" c:symbol-prefix="event" c:type="GdkEvent" abstract="1" glib:type-name="GdkEvent" glib:get-type="gdk_event_get_type" glib:fundamental="1" glib:ref-func="gdk_event_ref" glib:unref-func="gdk_event_unref">
-      <doc xml:space="preserve">`GdkEvent`s are immutable data structures, created by GDK to
-represent windowing system events.
+      <doc xml:space="preserve">Represents windowing system events.
 
 In GTK applications the events are handled automatically by toplevel
 widgets and passed on to the event controllers of appropriate widgets,
-so using `GdkEvent` and its related API is rarely needed.</doc>
+so using `GdkEvent` and its related API is rarely needed.
+
+`GdkEvent` structs are immutable.</doc>
       <method name="_get_angle" c:identifier="gdk_events_get_angle" moved-to="events_get_angle">
         <doc xml:space="preserve">Returns the relative angle from @event1 to @event2.
 
@@ -6682,8 +6781,7 @@ If the last reference is dropped, the structure is freed.</doc>
       </method>
     </class>
     <record name="EventSequence" c:type="GdkEventSequence" opaque="1" glib:type-name="GdkEventSequence" glib:get-type="gdk_event_sequence_get_type" c:symbol-prefix="event_sequence">
-      <doc xml:space="preserve">`GdkEventSequence` is an opaque type representing a sequence
-of related touch events.</doc>
+      <doc xml:space="preserve">An opaque type representing a sequence of related events.</doc>
     </record>
     <enumeration name="EventType" glib:type-name="GdkEventType" glib:get-type="gdk_event_type_get_type" c:type="GdkEventType">
       <doc xml:space="preserve">Specifies the type of the event.</doc>
@@ -6782,7 +6880,10 @@ of related touch events.</doc>
         <doc xml:space="preserve">A touchpad hold gesture event, the current state is determined by its phase
 field.</doc>
       </member>
-      <member name="event_last" value="29" c:identifier="GDK_EVENT_LAST" glib:nick="event-last" glib:name="GDK_EVENT_LAST">
+      <member name="pad_dial" value="29" c:identifier="GDK_PAD_DIAL" glib:nick="pad-dial" glib:name="GDK_PAD_DIAL">
+        <doc xml:space="preserve">A tablet pad axis event from a "dial".</doc>
+      </member>
+      <member name="event_last" value="30" c:identifier="GDK_EVENT_LAST" glib:nick="event-last" glib:name="GDK_EVENT_LAST">
         <doc xml:space="preserve">marks the end of the GdkEventType enumeration.</doc>
       </member>
     </enumeration>
@@ -6881,8 +6982,7 @@ leaving the surface.</doc>
       </method>
     </class>
     <class name="FrameClock" c:symbol-prefix="frame_clock" c:type="GdkFrameClock" parent="GObject.Object" abstract="1" glib:type-name="GdkFrameClock" glib:get-type="gdk_frame_clock_get_type" glib:type-struct="FrameClockClass">
-      <doc xml:space="preserve">A `GdkFrameClock` tells the application when to update and repaint
-a surface.
+      <doc xml:space="preserve">Tells the application when to update and repaint a surface.
 
 This may be synced to the vertical refresh rate of the monitor, for example.
 Even when the frame clock uses a simple timer rather than a hardware-based
@@ -7219,8 +7319,7 @@ The elements of the enumeration correspond to the signals of `GdkFrameClock`.</d
     </bitfield>
     <record name="FrameClockPrivate" c:type="GdkFrameClockPrivate" disguised="1" opaque="1"/>
     <record name="FrameTimings" c:type="GdkFrameTimings" opaque="1" glib:type-name="GdkFrameTimings" glib:get-type="gdk_frame_timings_get_type" c:symbol-prefix="frame_timings">
-      <doc xml:space="preserve">A `GdkFrameTimings` object holds timing information for a single frame
-of the application&#x2019;s displays.
+      <doc xml:space="preserve">Holds timing information for a single frame of the application&#x2019;s displays.
 
 To retrieve `GdkFrameTimings` objects, use [method@Gdk.FrameClock.get_timings]
 or [method@Gdk.FrameClock.get_current_timings]. The information in
@@ -7393,8 +7492,7 @@ If @timings is no longer referenced, it will be freed.</doc>
       </member>
     </bitfield>
     <class name="GLContext" c:symbol-prefix="gl_context" c:type="GdkGLContext" parent="DrawContext" abstract="1" glib:type-name="GdkGLContext" glib:get-type="gdk_gl_context_get_type">
-      <doc xml:space="preserve">`GdkGLContext` is an object representing a platform-specific
-OpenGL draw context.
+      <doc xml:space="preserve">Represents a platform-specific OpenGL draw context.
 
 `GdkGLContext`s are created for a surface using
 [method@Gdk.Surface.create_gl_context], and the context will match
@@ -7874,7 +7972,7 @@ anymore, this function has been deprecated and now always returns %NULL.</doc>
       </function>
     </enumeration>
     <class name="GLTexture" c:symbol-prefix="gl_texture" c:type="GdkGLTexture" parent="Texture" glib:type-name="GdkGLTexture" glib:get-type="gdk_gl_texture_get_type" glib:type-struct="GLTextureClass">
-      <doc xml:space="preserve">A GdkTexture representing a GL texture object.</doc>
+      <doc xml:space="preserve">A `GdkTexture` representing a GL texture object.</doc>
       <implements name="Paintable"/>
       <implements name="Gio.Icon"/>
       <implements name="Gio.LoadableIcon"/>
@@ -7937,8 +8035,7 @@ function has been called.</doc>
       </method>
     </class>
     <class name="GLTextureBuilder" c:symbol-prefix="gl_texture_builder" c:type="GdkGLTextureBuilder" version="4.12" parent="GObject.Object" glib:type-name="GdkGLTextureBuilder" glib:get-type="gdk_gl_texture_builder_get_type" glib:type-struct="GLTextureBuilderClass">
-      <doc xml:space="preserve">`GdkGLTextureBuilder` is a builder used to construct [class@Gdk.Texture] objects from
-GL textures.
+      <doc xml:space="preserve">Constructs [class@Gdk.Texture] objects from GL textures.
 
 The operation is quite simple: Create a texture builder, set all the necessary
 properties - keep in mind that the properties [property@Gdk.GLTextureBuilder:context],
@@ -8676,6 +8773,12 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_1" value="49" c:type="GDK_KEY_1">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_10ChannelsDown" value="268964281" c:type="GDK_KEY_10ChannelsDown">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_10ChannelsUp" value="268964280" c:type="GDK_KEY_10ChannelsUp">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_2" value="50" c:type="GDK_KEY_2">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -8772,6 +8875,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_3270_Test" value="64781" c:type="GDK_KEY_3270_Test">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_3DMode" value="268964463" c:type="GDK_KEY_3DMode">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_4" value="52" c:type="GDK_KEY_4">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -8794,6 +8900,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_AE" value="198" c:type="GDK_KEY_AE">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_ALSToggle" value="268964400" c:type="GDK_KEY_ALSToggle">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Aacute" value="193" c:type="GDK_KEY_Aacute">
@@ -8826,6 +8935,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_AccessX_Feedback_Enable" value="65137" c:type="GDK_KEY_AccessX_Feedback_Enable">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Accessibility" value="268964430" c:type="GDK_KEY_Accessibility">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Acircumflex" value="194" c:type="GDK_KEY_Acircumflex">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -8847,6 +8959,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_AddFavorite" value="269025081" c:type="GDK_KEY_AddFavorite">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Addressbook" value="268964269" c:type="GDK_KEY_Addressbook">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Adiaeresis" value="196" c:type="GDK_KEY_Adiaeresis">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -8866,6 +8981,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Aogonek" value="417" c:type="GDK_KEY_Aogonek">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_AppSelect" value="268964420" c:type="GDK_KEY_AppSelect">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_ApplicationLeft" value="269025104" c:type="GDK_KEY_ApplicationLeft">
@@ -9387,13 +9505,34 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Armenian_zhe" value="16778602" c:type="GDK_KEY_Armenian_zhe">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_AspectRatio" value="268964215" c:type="GDK_KEY_AspectRatio">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Assistant" value="268964423" c:type="GDK_KEY_Assistant">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Atilde" value="195" c:type="GDK_KEY_Atilde">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_AttendantOff" value="268964380" c:type="GDK_KEY_AttendantOff">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_AttendantOn" value="268964379" c:type="GDK_KEY_AttendantOn">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_AttendantToggle" value="268964381" c:type="GDK_KEY_AttendantToggle">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_AudibleBell_Enable" value="65146" c:type="GDK_KEY_AudibleBell_Enable">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Audio" value="268964232" c:type="GDK_KEY_Audio">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_AudioCycleTrack" value="269025179" c:type="GDK_KEY_AudioCycleTrack">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_AudioDesc" value="268964462" c:type="GDK_KEY_AudioDesc">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_AudioForward" value="269025175" c:type="GDK_KEY_AudioForward">
@@ -9444,6 +9583,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_AudioStop" value="269025045" c:type="GDK_KEY_AudioStop">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_AutopilotEngageToggle" value="268964477" c:type="GDK_KEY_AutopilotEngageToggle">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Away" value="269025165" c:type="GDK_KEY_Away">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -9486,6 +9628,18 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_BrightnessAdjust" value="269025083" c:type="GDK_KEY_BrightnessAdjust">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_BrightnessAuto" value="268964084" c:type="GDK_KEY_BrightnessAuto">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_BrightnessMax" value="268964433" c:type="GDK_KEY_BrightnessMax">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_BrightnessMin" value="268964432" c:type="GDK_KEY_BrightnessMin">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Buttonconfig" value="268964416" c:type="GDK_KEY_Buttonconfig">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Byelorussian_SHORTU" value="1726" c:type="GDK_KEY_Byelorussian_SHORTU">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -9519,6 +9673,36 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Calendar" value="269025056" c:type="GDK_KEY_Calendar">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_CameraAccessDisable" value="268964428" c:type="GDK_KEY_CameraAccessDisable">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_CameraAccessEnable" value="268964427" c:type="GDK_KEY_CameraAccessEnable">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_CameraAccessToggle" value="268964429" c:type="GDK_KEY_CameraAccessToggle">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_CameraDown" value="268964376" c:type="GDK_KEY_CameraDown">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_CameraFocus" value="268964368" c:type="GDK_KEY_CameraFocus">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_CameraLeft" value="268964377" c:type="GDK_KEY_CameraLeft">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_CameraRight" value="268964378" c:type="GDK_KEY_CameraRight">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_CameraUp" value="268964375" c:type="GDK_KEY_CameraUp">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_CameraZoomIn" value="268964373" c:type="GDK_KEY_CameraZoomIn">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_CameraZoomOut" value="268964374" c:type="GDK_KEY_CameraZoomOut">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Cancel" value="65385" c:type="GDK_KEY_Cancel">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -9537,10 +9721,19 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Ch" value="65185" c:type="GDK_KEY_Ch">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_ChannelDown" value="268964243" c:type="GDK_KEY_ChannelDown">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_ChannelUp" value="268964242" c:type="GDK_KEY_ChannelUp">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Clear" value="65291" c:type="GDK_KEY_Clear">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_ClearGrab" value="269024801" c:type="GDK_KEY_ClearGrab">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_ClearvuSonar" value="268964486" c:type="GDK_KEY_ClearvuSonar">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Close" value="269025110" c:type="GDK_KEY_Close">
@@ -9555,7 +9748,13 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Community" value="269025085" c:type="GDK_KEY_Community">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_ContextMenu" value="268964278" c:type="GDK_KEY_ContextMenu">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_ContrastAdjust" value="269025058" c:type="GDK_KEY_ContrastAdjust">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_ControlPanel" value="268964419" c:type="GDK_KEY_ControlPanel">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Control_L" value="65507" c:type="GDK_KEY_Control_L">
@@ -9894,7 +10093,16 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_DOS" value="269025114" c:type="GDK_KEY_DOS">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_DVD" value="268964229" c:type="GDK_KEY_DVD">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Dabovedot" value="16784906" c:type="GDK_KEY_Dabovedot">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Data" value="268964471" c:type="GDK_KEY_Data">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Database" value="268964266" c:type="GDK_KEY_Database">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Dcaron" value="463" c:type="GDK_KEY_Dcaron">
@@ -9903,7 +10111,19 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Delete" value="65535" c:type="GDK_KEY_Delete">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Dictate" value="268964426" c:type="GDK_KEY_Dictate">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Display" value="269025113" c:type="GDK_KEY_Display">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_DisplayOff" value="268964085" c:type="GDK_KEY_DisplayOff">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_DisplayToggle" value="268964271" c:type="GDK_KEY_DisplayToggle">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_DoNotDisturb" value="268964431" c:type="GDK_KEY_DoNotDisturb">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Documents" value="269025115" c:type="GDK_KEY_Documents">
@@ -9916,6 +10136,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Dstroke" value="464" c:type="GDK_KEY_Dstroke">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_DualRangeRadar" value="268964483" c:type="GDK_KEY_DualRangeRadar">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_E" value="69" c:type="GDK_KEY_E">
@@ -9966,6 +10189,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Ediaeresis" value="203" c:type="GDK_KEY_Ediaeresis">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Editor" value="268964262" c:type="GDK_KEY_Editor">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Egrave" value="200" c:type="GDK_KEY_Egrave">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -9982,6 +10208,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Emacron" value="938" c:type="GDK_KEY_Emacron">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_EmojiPicker" value="268964425" c:type="GDK_KEY_EmojiPicker">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_End" value="65367" c:type="GDK_KEY_End">
@@ -10158,6 +10387,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Farsi_yeh" value="16778956" c:type="GDK_KEY_Farsi_yeh">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_FastReverse" value="268964469" c:type="GDK_KEY_FastReverse">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Favorites" value="269025072" c:type="GDK_KEY_Favorites">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -10170,6 +10402,18 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_First_Virtual_Screen" value="65232" c:type="GDK_KEY_First_Virtual_Screen">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_FishingChart" value="268964481" c:type="GDK_KEY_FishingChart">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Fn" value="268964304" c:type="GDK_KEY_Fn">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_FnRightShift" value="268964325" c:type="GDK_KEY_FnRightShift">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Fn_Esc" value="268964305" c:type="GDK_KEY_Fn_Esc">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Forward" value="269025063" c:type="GDK_KEY_Forward">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -10177,6 +10421,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_FrameForward" value="269025182" c:type="GDK_KEY_FrameForward">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_FullScreen" value="269025208" c:type="GDK_KEY_FullScreen">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_G" value="71" c:type="GDK_KEY_G">
@@ -10318,6 +10565,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Go" value="269025119" c:type="GDK_KEY_Go">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_GraphicsEditor" value="268964264" c:type="GDK_KEY_GraphicsEditor">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Greek_ALPHA" value="1985" c:type="GDK_KEY_Greek_ALPHA">
@@ -10869,6 +11119,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Hangul_switch" value="65406" c:type="GDK_KEY_Hangul_switch">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_HangupPhone" value="268964286" c:type="GDK_KEY_HangupPhone">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Hankaku" value="65321" c:type="GDK_KEY_Hankaku">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11067,6 +11320,12 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Imacron" value="975" c:type="GDK_KEY_Imacron">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Images" value="268964282" c:type="GDK_KEY_Images">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Info" value="268964198" c:type="GDK_KEY_Info">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Insert" value="65379" c:type="GDK_KEY_Insert">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11080,6 +11339,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Jcircumflex" value="684" c:type="GDK_KEY_Jcircumflex">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Journal" value="268964418" c:type="GDK_KEY_Journal">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_K" value="75" c:type="GDK_KEY_K">
@@ -11217,6 +11479,39 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_KbdBrightnessUp" value="269025029" c:type="GDK_KEY_KbdBrightnessUp">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_KbdInputAssistAccept" value="268964452" c:type="GDK_KEY_KbdInputAssistAccept">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdInputAssistCancel" value="268964453" c:type="GDK_KEY_KbdInputAssistCancel">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdInputAssistNext" value="268964449" c:type="GDK_KEY_KbdInputAssistNext">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdInputAssistNextgroup" value="268964451" c:type="GDK_KEY_KbdInputAssistNextgroup">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdInputAssistPrev" value="268964448" c:type="GDK_KEY_KbdInputAssistPrev">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdInputAssistPrevgroup" value="268964450" c:type="GDK_KEY_KbdInputAssistPrevgroup">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdLcdMenu1" value="268964536" c:type="GDK_KEY_KbdLcdMenu1">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdLcdMenu2" value="268964537" c:type="GDK_KEY_KbdLcdMenu2">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdLcdMenu3" value="268964538" c:type="GDK_KEY_KbdLcdMenu3">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdLcdMenu4" value="268964539" c:type="GDK_KEY_KbdLcdMenu4">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_KbdLcdMenu5" value="268964540" c:type="GDK_KEY_KbdLcdMenu5">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_KbdLightOnOff" value="269025028" c:type="GDK_KEY_KbdLightOnOff">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11328,7 +11623,16 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Left" value="65361" c:type="GDK_KEY_Left">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_LeftDown" value="268964457" c:type="GDK_KEY_LeftDown">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_LeftUp" value="268964456" c:type="GDK_KEY_LeftUp">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_LightBulb" value="269025077" c:type="GDK_KEY_LightBulb">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_LightsToggle" value="268964382" c:type="GDK_KEY_LightsToggle">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Linefeed" value="65290" c:type="GDK_KEY_Linefeed">
@@ -11373,6 +11677,114 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Macedonia_kje" value="1708" c:type="GDK_KEY_Macedonia_kje">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Macro1" value="268964496" c:type="GDK_KEY_Macro1">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro10" value="268964505" c:type="GDK_KEY_Macro10">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro11" value="268964506" c:type="GDK_KEY_Macro11">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro12" value="268964507" c:type="GDK_KEY_Macro12">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro13" value="268964508" c:type="GDK_KEY_Macro13">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro14" value="268964509" c:type="GDK_KEY_Macro14">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro15" value="268964510" c:type="GDK_KEY_Macro15">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro16" value="268964511" c:type="GDK_KEY_Macro16">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro17" value="268964512" c:type="GDK_KEY_Macro17">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro18" value="268964513" c:type="GDK_KEY_Macro18">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro19" value="268964514" c:type="GDK_KEY_Macro19">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro2" value="268964497" c:type="GDK_KEY_Macro2">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro20" value="268964515" c:type="GDK_KEY_Macro20">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro21" value="268964516" c:type="GDK_KEY_Macro21">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro22" value="268964517" c:type="GDK_KEY_Macro22">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro23" value="268964518" c:type="GDK_KEY_Macro23">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro24" value="268964519" c:type="GDK_KEY_Macro24">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro25" value="268964520" c:type="GDK_KEY_Macro25">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro26" value="268964521" c:type="GDK_KEY_Macro26">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro27" value="268964522" c:type="GDK_KEY_Macro27">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro28" value="268964523" c:type="GDK_KEY_Macro28">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro29" value="268964524" c:type="GDK_KEY_Macro29">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro3" value="268964498" c:type="GDK_KEY_Macro3">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro30" value="268964525" c:type="GDK_KEY_Macro30">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro4" value="268964499" c:type="GDK_KEY_Macro4">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro5" value="268964500" c:type="GDK_KEY_Macro5">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro6" value="268964501" c:type="GDK_KEY_Macro6">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro7" value="268964502" c:type="GDK_KEY_Macro7">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro8" value="268964503" c:type="GDK_KEY_Macro8">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Macro9" value="268964504" c:type="GDK_KEY_Macro9">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_MacroPreset1" value="268964531" c:type="GDK_KEY_MacroPreset1">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_MacroPreset2" value="268964532" c:type="GDK_KEY_MacroPreset2">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_MacroPreset3" value="268964533" c:type="GDK_KEY_MacroPreset3">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_MacroPresetCycle" value="268964530" c:type="GDK_KEY_MacroPresetCycle">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_MacroRecordStart" value="268964528" c:type="GDK_KEY_MacroRecordStart">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_MacroRecordStop" value="268964529" c:type="GDK_KEY_MacroRecordStop">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Mae_Koho" value="65342" c:type="GDK_KEY_Mae_Koho">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11382,10 +11794,19 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_MailForward" value="269025168" c:type="GDK_KEY_MailForward">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_MarkWaypoint" value="268964478" c:type="GDK_KEY_MarkWaypoint">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Market" value="269025122" c:type="GDK_KEY_Market">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Massyo" value="65324" c:type="GDK_KEY_Massyo">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_MediaRepeat" value="268964279" c:type="GDK_KEY_MediaRepeat">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_MediaTopMenu" value="268964459" c:type="GDK_KEY_MediaTopMenu">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Meeting" value="269025123" c:type="GDK_KEY_Meeting">
@@ -11419,6 +11840,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Mode_switch" value="65406" c:type="GDK_KEY_Mode_switch">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_MonBrightnessCycle" value="269025031" c:type="GDK_KEY_MonBrightnessCycle">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_MonBrightnessDown" value="269025027" c:type="GDK_KEY_MonBrightnessDown">
@@ -11460,6 +11884,12 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_NairaSign" value="16785574" c:type="GDK_KEY_NairaSign">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_NavChart" value="268964480" c:type="GDK_KEY_NavChart">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_NavInfo" value="268964488" c:type="GDK_KEY_NavInfo">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Ncaron" value="466" c:type="GDK_KEY_Ncaron">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11478,16 +11908,79 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Next" value="65366" c:type="GDK_KEY_Next">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_NextElement" value="268964475" c:type="GDK_KEY_NextElement">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_NextFavorite" value="268964464" c:type="GDK_KEY_NextFavorite">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Next_VMode" value="269024802" c:type="GDK_KEY_Next_VMode">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Next_Virtual_Screen" value="65234" c:type="GDK_KEY_Next_Virtual_Screen">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_NotificationCenter" value="268964284" c:type="GDK_KEY_NotificationCenter">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Ntilde" value="209" c:type="GDK_KEY_Ntilde">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Num_Lock" value="65407" c:type="GDK_KEY_Num_Lock">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric0" value="268964352" c:type="GDK_KEY_Numeric0">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric1" value="268964353" c:type="GDK_KEY_Numeric1">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric11" value="268964460" c:type="GDK_KEY_Numeric11">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric12" value="268964461" c:type="GDK_KEY_Numeric12">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric2" value="268964354" c:type="GDK_KEY_Numeric2">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric3" value="268964355" c:type="GDK_KEY_Numeric3">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric4" value="268964356" c:type="GDK_KEY_Numeric4">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric5" value="268964357" c:type="GDK_KEY_Numeric5">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric6" value="268964358" c:type="GDK_KEY_Numeric6">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric7" value="268964359" c:type="GDK_KEY_Numeric7">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric8" value="268964360" c:type="GDK_KEY_Numeric8">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Numeric9" value="268964361" c:type="GDK_KEY_Numeric9">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_NumericA" value="268964364" c:type="GDK_KEY_NumericA">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_NumericB" value="268964365" c:type="GDK_KEY_NumericB">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_NumericC" value="268964366" c:type="GDK_KEY_NumericC">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_NumericD" value="268964367" c:type="GDK_KEY_NumericD">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_NumericPound" value="268964363" c:type="GDK_KEY_NumericPound">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_NumericStar" value="268964362" c:type="GDK_KEY_NumericStar">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_O" value="79" c:type="GDK_KEY_O">
@@ -11562,6 +12055,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Omacron" value="978" c:type="GDK_KEY_Omacron">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_OnScreenKeyboard" value="268964472" c:type="GDK_KEY_OnScreenKeyboard">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Ooblique" value="216" c:type="GDK_KEY_Ooblique">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11604,10 +12100,16 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Pause" value="65299" c:type="GDK_KEY_Pause">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_PauseRecord" value="268964466" c:type="GDK_KEY_PauseRecord">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_PesetaSign" value="16785575" c:type="GDK_KEY_PesetaSign">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Phone" value="269025134" c:type="GDK_KEY_Phone">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_PickupPhone" value="268964285" c:type="GDK_KEY_PickupPhone">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Pictures" value="269025169" c:type="GDK_KEY_Pictures">
@@ -11709,6 +12211,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_PowerOff" value="269025066" c:type="GDK_KEY_PowerOff">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Presentation" value="268964265" c:type="GDK_KEY_Presentation">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Prev_VMode" value="269024803" c:type="GDK_KEY_Prev_VMode">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11718,10 +12223,16 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_PreviousCandidate" value="65342" c:type="GDK_KEY_PreviousCandidate">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_PreviousElement" value="268964476" c:type="GDK_KEY_PreviousElement">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Print" value="65377" c:type="GDK_KEY_Print">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Prior" value="65365" c:type="GDK_KEY_Prior">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_PrivacyScreenToggle" value="268964473" c:type="GDK_KEY_PrivacyScreenToggle">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Q" value="81" c:type="GDK_KEY_Q">
@@ -11781,6 +12292,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Racute" value="448" c:type="GDK_KEY_Racute">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_RadarOverlay" value="268964484" c:type="GDK_KEY_RadarOverlay">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Rcaron" value="472" c:type="GDK_KEY_Rcaron">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11794,6 +12308,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Refresh" value="269025065" c:type="GDK_KEY_Refresh">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_RefreshRateToggle" value="268964402" c:type="GDK_KEY_RefreshRateToggle">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Reload" value="269025139" c:type="GDK_KEY_Reload">
@@ -11811,6 +12328,12 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Right" value="65363" c:type="GDK_KEY_Right">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_RightDown" value="268964455" c:type="GDK_KEY_RightDown">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_RightUp" value="268964454" c:type="GDK_KEY_RightUp">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_RockerDown" value="269025060" c:type="GDK_KEY_RockerDown">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11823,10 +12346,16 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Romaji" value="65316" c:type="GDK_KEY_Romaji">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_RootMenu" value="268964458" c:type="GDK_KEY_RootMenu">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_RotateWindows" value="269025140" c:type="GDK_KEY_RotateWindows">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_RotationKB" value="269025142" c:type="GDK_KEY_RotationKB">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_RotationLockToggle" value="269025207" c:type="GDK_KEY_RotationLockToggle">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_RotationPB" value="269025141" c:type="GDK_KEY_RotationPB">
@@ -11862,6 +12391,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_ScreenSaver" value="269025069" c:type="GDK_KEY_ScreenSaver">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Screensaver" value="268964421" c:type="GDK_KEY_Screensaver">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_ScrollClick" value="269025146" c:type="GDK_KEY_ScrollClick">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -11881,6 +12413,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_SelectButton" value="269025184" c:type="GDK_KEY_SelectButton">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_SelectiveScreenshot" value="268964474" c:type="GDK_KEY_SelectiveScreenshot">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Send" value="269025147" c:type="GDK_KEY_Send">
@@ -11934,7 +12469,13 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Shop" value="269025078" c:type="GDK_KEY_Shop">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_SidevuSonar" value="268964487" c:type="GDK_KEY_SidevuSonar">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_SingleCandidate" value="65340" c:type="GDK_KEY_SingleCandidate">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_SingleRangeRadar" value="268964482" c:type="GDK_KEY_SingleRangeRadar">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Sinh_a" value="16780677" c:type="GDK_KEY_Sinh_a">
@@ -12183,7 +12724,16 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_SlowKeys_Enable" value="65139" c:type="GDK_KEY_SlowKeys_Enable">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_SlowReverse" value="268964470" c:type="GDK_KEY_SlowReverse">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Sos" value="268964479" c:type="GDK_KEY_Sos">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Spell" value="269025148" c:type="GDK_KEY_Spell">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_SpellCheck" value="268964272" c:type="GDK_KEY_SpellCheck">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_SplitScreen" value="269025149" c:type="GDK_KEY_SplitScreen">
@@ -12199,6 +12749,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Stop" value="269025064" c:type="GDK_KEY_Stop">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_StopRecord" value="268964465" c:type="GDK_KEY_StopRecord">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Subtitle" value="269025178" c:type="GDK_KEY_Subtitle">
@@ -12268,6 +12821,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_TaskPane" value="269025151" c:type="GDK_KEY_TaskPane">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Taskmanager" value="268964417" c:type="GDK_KEY_Taskmanager">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Tcaron" value="427" c:type="GDK_KEY_Tcaron">
@@ -12561,6 +13117,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Touroku" value="65323" c:type="GDK_KEY_Touroku">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_TraditionalSonar" value="268964485" c:type="GDK_KEY_TraditionalSonar">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Travel" value="269025154" c:type="GDK_KEY_Travel">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -12666,6 +13225,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_Ungrab" value="269024800" c:type="GDK_KEY_Ungrab">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_Unmute" value="268964468" c:type="GDK_KEY_Unmute">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_Uogonek" value="985" c:type="GDK_KEY_Uogonek">
       <type name="gint" c:type="gint"/>
     </constant>
@@ -12690,13 +13252,25 @@ If this is set, GTK will wait on it before using the texture.</doc>
     <constant name="KEY_V" value="86" c:type="GDK_KEY_V">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_VOD" value="268964467" c:type="GDK_KEY_VOD">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_VendorHome" value="269025076" c:type="GDK_KEY_VendorHome">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Video" value="269025159" c:type="GDK_KEY_Video">
       <type name="gint" c:type="gint"/>
     </constant>
+    <constant name="KEY_VideoPhone" value="268964256" c:type="GDK_KEY_VideoPhone">
+      <type name="gint" c:type="gint"/>
+    </constant>
     <constant name="KEY_View" value="269025185" c:type="GDK_KEY_View">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_VoiceCommand" value="268964422" c:type="GDK_KEY_VoiceCommand">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_Voicemail" value="268964268" c:type="GDK_KEY_Voicemail">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_VoidSymbol" value="16777215" c:type="GDK_KEY_VoidSymbol">
@@ -12706,6 +13280,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_WLAN" value="269025173" c:type="GDK_KEY_WLAN">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_WPSButton" value="268964369" c:type="GDK_KEY_WPSButton">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_WWAN" value="269025204" c:type="GDK_KEY_WWAN">
@@ -12805,6 +13382,9 @@ If this is set, GTK will wait on it before using the texture.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_ZoomOut" value="269025164" c:type="GDK_KEY_ZoomOut">
+      <type name="gint" c:type="gint"/>
+    </constant>
+    <constant name="KEY_ZoomReset" value="268964260" c:type="GDK_KEY_ZoomReset">
       <type name="gint" c:type="gint"/>
     </constant>
     <constant name="KEY_Zstroke" value="16777653" c:type="GDK_KEY_Zstroke">
@@ -15686,7 +16266,7 @@ Note that we ignore Caps Lock for matching.</doc>
       </member>
     </enumeration>
     <record name="KeymapKey" c:type="GdkKeymapKey">
-      <doc xml:space="preserve">A `GdkKeymapKey` is a hardware key that can be mapped to a keyval.</doc>
+      <doc xml:space="preserve">Represents a hardware key that can be mapped to a keyval.</doc>
       <field name="keycode" writable="1">
         <doc xml:space="preserve">the hardware keycode. This is an identifying number for a
   physical key.</doc>
@@ -15726,7 +16306,7 @@ Note that we ignore Caps Lock for matching.</doc>
       </parameters>
     </function-macro>
     <enumeration name="MemoryFormat" glib:type-name="GdkMemoryFormat" glib:get-type="gdk_memory_format_get_type" c:type="GdkMemoryFormat">
-      <doc xml:space="preserve">`GdkMemoryFormat` describes formats that image data can have in memory.
+      <doc xml:space="preserve">Describes formats that image data can have in memory.
 
 It describes formats by listing the contents of the memory passed to it.
 So `GDK_MEMORY_A8R8G8B8` will be 1 byte (8 bits) of alpha, followed by a
@@ -15845,7 +16425,319 @@ the alpha value.</doc>
       <member name="x8b8g8r8" value="32" c:identifier="GDK_MEMORY_X8B8G8R8" version="4.14" glib:nick="x8b8g8r8" glib:name="GDK_MEMORY_X8B8G8R8">
         <doc xml:space="preserve">4 bytes; for unused, blue, green, red.</doc>
       </member>
-      <member name="n_formats" value="33" c:identifier="GDK_MEMORY_N_FORMATS" glib:nick="n-formats" glib:name="GDK_MEMORY_N_FORMATS">
+      <member name="g8_b8r8_420" value="33" c:identifier="GDK_MEMORY_G8_B8R8_420" version="4.20" glib:nick="g8-b8r8-420" glib:name="GDK_MEMORY_G8_B8R8_420">
+        <doc xml:space="preserve">Multiplane format with 2 planes.
+
+The first plane contains the first channel, usually containing
+luma values.
+The second plane with interleaved chroma values, Cb followed by Cr.
+Subsampled in both the X and Y direction.
+
+Commonly known by the fourcc "NV12".</doc>
+      </member>
+      <member name="g8_r8b8_420" value="34" c:identifier="GDK_MEMORY_G8_R8B8_420" version="4.20" glib:nick="g8-r8b8-420" glib:name="GDK_MEMORY_G8_R8B8_420">
+        <doc xml:space="preserve">Multiplane format with 2 planes.
+
+The first plane contains the first channel, usually containing
+luma values.
+The second plane with interleaved chroma values, Cr followed by Cb.
+Subsampled in both the X and Y direction.
+
+Commonly known by the fourcc "NV21".</doc>
+      </member>
+      <member name="g8_b8r8_422" value="35" c:identifier="GDK_MEMORY_G8_B8R8_422" version="4.20" glib:nick="g8-b8r8-422" glib:name="GDK_MEMORY_G8_B8R8_422">
+        <doc xml:space="preserve">Multiplane format with 2 planes.
+
+The first plane contains the first channel, usually containing
+luma values.
+The second plane with interleaved chroma values, Cb followed by Cr.
+Subsampled in the X direction.
+
+Commonly known by the fourcc "NV16".</doc>
+      </member>
+      <member name="g8_r8b8_422" value="36" c:identifier="GDK_MEMORY_G8_R8B8_422" version="4.20" glib:nick="g8-r8b8-422" glib:name="GDK_MEMORY_G8_R8B8_422">
+        <doc xml:space="preserve">Multiplane format with 2 planes.
+
+The first plane contains the first channel, usually containing
+luma values.
+The second plane with interleaved chroma values, Cr followed by Cb.
+Subsampled in the X direction.
+
+Commonly known by the fourcc "NV61".</doc>
+      </member>
+      <member name="g8_b8r8_444" value="37" c:identifier="GDK_MEMORY_G8_B8R8_444" version="4.20" glib:nick="g8-b8r8-444" glib:name="GDK_MEMORY_G8_B8R8_444">
+        <doc xml:space="preserve">Multiplane format with 2 planes.
+
+The first plane contains the first channel, usually containing
+luma values.
+The second plane with interleaved chroma values, Cb followed by Cr.
+This format is not subsampled.
+
+Commonly known by the fourcc "NV24".</doc>
+      </member>
+      <member name="g8_r8b8_444" value="38" c:identifier="GDK_MEMORY_G8_R8B8_444" version="4.20" glib:nick="g8-r8b8-444" glib:name="GDK_MEMORY_G8_R8B8_444">
+        <doc xml:space="preserve">Multiplane format with 2 planes.
+
+The first plane contains the first channel, usually containing
+luma values.
+The second plane with interleaved chroma values, Cr followed by Cb.
+This format is not subsampled.
+
+Commonly known by the fourcc "NV42".</doc>
+      </member>
+      <member name="g10x6_b10x6r10x6_420" value="39" c:identifier="GDK_MEMORY_G10X6_B10X6R10X6_420" version="4.20" glib:nick="g10x6-b10x6r10x6-420" glib:name="GDK_MEMORY_G10X6_B10X6R10X6_420">
+        <doc xml:space="preserve">Multiplane format with 2 planes.
+
+Each channel is a 16 bit integer, but only the highest 10 bits are used.
+
+The first plane contains the first channel, usually containing
+luma values.
+The second plane with interleaved chroma values, Cr followed by Cb.
+This format is not subsampled.
+
+Commonly known by the fourcc "P010".</doc>
+      </member>
+      <member name="g12x4_b12x4r12x4_420" value="40" c:identifier="GDK_MEMORY_G12X4_B12X4R12X4_420" version="4.20" glib:nick="g12x4-b12x4r12x4-420" glib:name="GDK_MEMORY_G12X4_B12X4R12X4_420">
+        <doc xml:space="preserve">Multiplane format with 2 planes.
+
+Each channel is a 16 bit integer, but only the highest 10 bits are used.
+
+The first plane contains the first channel, usually containing
+luma values.
+The second plane with interleaved chroma values, Cr followed by Cb.
+This format is not subsampled.
+
+Commonly known by the fourcc "P012".</doc>
+      </member>
+      <member name="g16_b16r16_420" value="41" c:identifier="GDK_MEMORY_G16_B16R16_420" version="4.20" glib:nick="g16-b16r16-420" glib:name="GDK_MEMORY_G16_B16R16_420">
+        <doc xml:space="preserve">Multiplane format with 2 planes.
+
+Each channel is a 16 bit integer.
+
+The first plane contains the first channel, usually containing
+luma values.
+The second plane with interleaved chroma values, Cr followed by Cb.
+This format is not subsampled.
+
+Commonly known by the fourcc "P016".</doc>
+      </member>
+      <member name="g8_b8_r8_410" value="42" c:identifier="GDK_MEMORY_G8_B8_R8_410" version="4.20" glib:nick="g8-b8-r8-410" glib:name="GDK_MEMORY_G8_B8_R8_410">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the first chroma chanel.
+Subsampled in both the X and Y direction with 4:1 ratio. It is
+mapped into the 3rd channel.
+
+The third plane usually contains the second chroma channel.
+Subsampled in both the X and Y direction with 4:1 ratio. It is
+mapped into the 1st channel.
+
+Commonly known by the fourcc "YUV410".</doc>
+      </member>
+      <member name="g8_r8_b8_410" value="43" c:identifier="GDK_MEMORY_G8_R8_B8_410" version="4.20" glib:nick="g8-r8-b8-410" glib:name="GDK_MEMORY_G8_R8_B8_410">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the second chroma chanel.
+Subsampled in both the X and Y direction with 4:1 ratio. It is
+mapped into the 1st channel.
+
+The third plane usually contains the first chroma channel.
+Subsampled in both the X and Y direction with 4:1 ratio. It is
+mapped into the 3rd channel.
+
+Commonly known by the fourcc "YVU410".</doc>
+      </member>
+      <member name="g8_b8_r8_411" value="44" c:identifier="GDK_MEMORY_G8_B8_R8_411" version="4.20" glib:nick="g8-b8-r8-411" glib:name="GDK_MEMORY_G8_B8_R8_411">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the first chroma chanel.
+Subsampled in the X direction with 4:1 ratio. It is
+mapped into the 3rd channel.
+
+The third plane usually contains the second chroma channel.
+Subsampled in the X direction with 4:1 ratio. It is
+mapped into the 1st channel.
+
+Commonly known by the fourcc "YUV411".</doc>
+      </member>
+      <member name="g8_r8_b8_411" value="45" c:identifier="GDK_MEMORY_G8_R8_B8_411" version="4.20" glib:nick="g8-r8-b8-411" glib:name="GDK_MEMORY_G8_R8_B8_411">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the second chroma chanel.
+Subsampled in the X direction with 4:1 ratio. It is
+mapped into the 1st channel.
+
+The third plane usually contains the first chroma channel.
+Subsampled in the X direction with 4:1 ratio. It is
+mapped into the 3rd channel.
+
+Commonly known by the fourcc "YVU411".</doc>
+      </member>
+      <member name="g8_b8_r8_420" value="46" c:identifier="GDK_MEMORY_G8_B8_R8_420" version="4.20" glib:nick="g8-b8-r8-420" glib:name="GDK_MEMORY_G8_B8_R8_420">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the first chroma chanel.
+Subsampled in both the X and Y direction. It is mapped into the
+3rd channel.
+
+The third plane usually contains the second chroma channel.
+Subsampled in both the X and Y direction. It is mapped into the
+1st channel.
+
+Commonly known by the fourcc "YUV420".</doc>
+      </member>
+      <member name="g8_r8_b8_420" value="47" c:identifier="GDK_MEMORY_G8_R8_B8_420" version="4.20" glib:nick="g8-r8-b8-420" glib:name="GDK_MEMORY_G8_R8_B8_420">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the second chroma chanel.
+Subsampled in both the X and Y direction. It is mapped into the
+1st channel.
+
+The third plane usually contains the first chroma channel.
+Subsampled in both the X and Y direction. It is mapped into the
+3rd channel.
+
+Commonly known by the fourcc "YVU420".</doc>
+      </member>
+      <member name="g8_b8_r8_422" value="48" c:identifier="GDK_MEMORY_G8_B8_R8_422" version="4.20" glib:nick="g8-b8-r8-422" glib:name="GDK_MEMORY_G8_B8_R8_422">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the first chroma chanel.
+Subsampled in the X direction. It is mapped into the 3rd channel.
+
+The third plane usually contains the second chroma channel.
+Subsampled in the X direction. It is mapped into the 1st channel.
+
+Commonly known by the fourcc "YUV422".</doc>
+      </member>
+      <member name="g8_r8_b8_422" value="49" c:identifier="GDK_MEMORY_G8_R8_B8_422" version="4.20" glib:nick="g8-r8-b8-422" glib:name="GDK_MEMORY_G8_R8_B8_422">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the second chroma chanel.
+Subsampled in the X direction. It is mapped into the 1st channel.
+
+The third plane usually contains the first chroma channel.
+Subsampled in the X direction. It is mapped into the 3rd channel.
+
+Commonly known by the fourcc "YVU422".</doc>
+      </member>
+      <member name="g8_b8_r8_444" value="50" c:identifier="GDK_MEMORY_G8_B8_R8_444" version="4.20" glib:nick="g8-b8-r8-444" glib:name="GDK_MEMORY_G8_B8_R8_444">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the first chroma chanel. It is
+mapped into the 3rd channel.
+
+The third plane usually contains the second chroma channel. It is
+mapped into the 1st channel.
+
+Commonly known by the fourcc "YUV444".</doc>
+      </member>
+      <member name="g8_r8_b8_444" value="51" c:identifier="GDK_MEMORY_G8_R8_B8_444" version="4.20" glib:nick="g8-r8-b8-444" glib:name="GDK_MEMORY_G8_R8_B8_444">
+        <doc xml:space="preserve">Multiplane format with 3 planes.
+
+Each channel is a 8 bit integer.
+
+The first plane usually contains the luma channel. It is mapped
+into the 2nd channel.
+
+The second plane usually contains the second chroma chanel.
+Subsampled in the X direction. It is mapped into the 1st channel.
+
+The third plane usually contains the first chroma channel.
+Subsampled in the X direction. It is mapped into the 3rd channel.
+
+Commonly known by the fourcc "YVU444".</doc>
+      </member>
+      <member name="g8b8g8r8_422" value="52" c:identifier="GDK_MEMORY_G8B8G8R8_422" version="4.20" glib:nick="g8b8g8r8-422" glib:name="GDK_MEMORY_G8B8G8R8_422">
+        <doc xml:space="preserve">Packed format with subsampled channels.
+
+Each channel is a 8 bit integer. The red and blue/chroma channels
+are subsampled and interleaved with the green/luma channel.
+
+Each block contains 2 pixels, so the width must be a multiple of
+2.
+
+Commonly known by the fourcc "YUYV".</doc>
+      </member>
+      <member name="g8r8g8b8_422" value="53" c:identifier="GDK_MEMORY_G8R8G8B8_422" version="4.20" glib:nick="g8r8g8b8-422" glib:name="GDK_MEMORY_G8R8G8B8_422">
+        <doc xml:space="preserve">Packed format with subsampled channels.
+
+Each channel is a 8 bit integer. The red and blue/chroma channels
+are subsampled and interleaved with the green/luma channel.
+
+Each block contains 2 pixels, so the width must be a multiple of
+2.
+
+Commonly known by the fourcc "YVYU".</doc>
+      </member>
+      <member name="r8g8b8g8_422" value="54" c:identifier="GDK_MEMORY_R8G8B8G8_422" version="4.20" glib:nick="r8g8b8g8-422" glib:name="GDK_MEMORY_R8G8B8G8_422">
+        <doc xml:space="preserve">Packed format with subsampled channels.
+
+Each channel is a 8 bit integer. The red and blue/chroma channels
+are subsampled and interleaved with the green/luma channel.
+
+Each block contains 2 pixels, so the width must be a multiple of
+2.
+
+Commonly known by the fourcc "VYUY".</doc>
+      </member>
+      <member name="b8g8r8g8_422" value="55" c:identifier="GDK_MEMORY_B8G8R8G8_422" version="4.20" glib:nick="b8g8r8g8-422" glib:name="GDK_MEMORY_B8G8R8G8_422">
+        <doc xml:space="preserve">Packed format with subsampled channels.
+
+Each channel is a 8 bit integer. The red and blue/chroma channels
+are subsampled and interleaved with the green/luma channel.
+
+Each block contains 2 pixels, so the width must be a multiple of
+2.
+
+Commonly known by the fourcc "UYVY".</doc>
+      </member>
+      <member name="n_formats" value="56" c:identifier="GDK_MEMORY_N_FORMATS" glib:nick="n-formats" glib:name="GDK_MEMORY_N_FORMATS">
         <doc xml:space="preserve">The number of formats. This value will change as
   more formats get added, so do not rely on its concrete integer.</doc>
       </member>
@@ -15889,8 +16781,8 @@ in the given format.</doc>
       </constructor>
     </class>
     <class name="MemoryTextureBuilder" c:symbol-prefix="memory_texture_builder" c:type="GdkMemoryTextureBuilder" version="4.16" parent="GObject.Object" glib:type-name="GdkMemoryTextureBuilder" glib:get-type="gdk_memory_texture_builder_get_type" glib:type-struct="MemoryTextureBuilderClass">
-      <doc xml:space="preserve">`GdkMemoryTextureBuilder` is a builder used to construct [class@Gdk.Texture] objects
-from system memory provided via [struct@GLib.Bytes].
+      <doc xml:space="preserve">Constructs [class@Gdk.Texture] objects from system memory provided
+via [struct@GLib.Bytes].
 
 The operation is quite simple: Create a texture builder, set all the necessary
 properties - keep in mind that the properties [property@Gdk.MemoryTextureBuilder:bytes],
@@ -15980,6 +16872,23 @@ or 0 if the height wasn't set.</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_offset" c:identifier="gdk_memory_texture_builder_get_offset" version="4.20">
+        <doc xml:space="preserve">Gets the offset previously set via gdk_memory_texture_builder_set_offset().</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The offset associated to a @plane</doc>
+          <type name="gsize" c:type="gsize"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">a `GdkMemoryTextureBuilder`</doc>
+            <type name="MemoryTextureBuilder" c:type="GdkMemoryTextureBuilder*"/>
+          </instance-parameter>
+          <parameter name="plane" transfer-ownership="none">
+            <doc xml:space="preserve">a plane</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="get_stride" c:identifier="gdk_memory_texture_builder_get_stride" glib:get-property="stride" version="4.16">
         <doc xml:space="preserve">Gets the stride previously set via gdk_memory_texture_builder_set_stride().</doc>
         <return-value transfer-ownership="none">
@@ -15991,6 +16900,23 @@ or 0 if the height wasn't set.</doc>
             <doc xml:space="preserve">a `GdkMemoryTextureBuilder`</doc>
             <type name="MemoryTextureBuilder" c:type="GdkMemoryTextureBuilder*"/>
           </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_stride_for_plane" c:identifier="gdk_memory_texture_builder_get_stride_for_plane" version="4.20">
+        <doc xml:space="preserve">Gets the stride previously set via gdk_memory_texture_builder_set_stride_for_plane().</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">The stride associated to a @plane</doc>
+          <type name="gsize" c:type="gsize"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">a `GdkMemoryTextureBuilder`</doc>
+            <type name="MemoryTextureBuilder" c:type="GdkMemoryTextureBuilder*"/>
+          </instance-parameter>
+          <parameter name="plane" transfer-ownership="none">
+            <doc xml:space="preserve">a plane</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
         </parameters>
       </method>
       <method name="get_update_region" c:identifier="gdk_memory_texture_builder_get_update_region" glib:get-property="update-region" version="4.16">
@@ -16066,7 +16992,7 @@ what colorstates are, this is probably the right thing.</doc>
             <doc xml:space="preserve">a `GdkMemoryTextureBuilder`</doc>
             <type name="MemoryTextureBuilder" c:type="GdkMemoryTextureBuilder*"/>
           </instance-parameter>
-          <parameter name="color_state" transfer-ownership="none" nullable="1" allow-none="1">
+          <parameter name="color_state" transfer-ownership="none">
             <doc xml:space="preserve">The colorstate describing the data</doc>
             <type name="ColorState" c:type="GdkColorState*"/>
           </parameter>
@@ -16093,7 +17019,8 @@ The default is `GDK_MEMORY_R8G8B8A8_PREMULTIPLIED`.</doc>
       <method name="set_height" c:identifier="gdk_memory_texture_builder_set_height" glib:set-property="height" version="4.16">
         <doc xml:space="preserve">Sets the height of the texture.
 
-The height must be set before calling [method@Gdk.MemoryTextureBuilder.build].</doc>
+The height must be set before calling [method@Gdk.MemoryTextureBuilder.build]
+and conform to size requirements of the provided format.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -16105,6 +17032,26 @@ The height must be set before calling [method@Gdk.MemoryTextureBuilder.build].</
           <parameter name="height" transfer-ownership="none">
             <doc xml:space="preserve">The texture's height or 0 to unset</doc>
             <type name="gint" c:type="int"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_offset" c:identifier="gdk_memory_texture_builder_set_offset" version="4.20">
+        <doc xml:space="preserve">Sets the offset of the texture for @plane.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">a `GdkMemoryTextureBuilder`</doc>
+            <type name="MemoryTextureBuilder" c:type="GdkMemoryTextureBuilder*"/>
+          </instance-parameter>
+          <parameter name="plane" transfer-ownership="none">
+            <doc xml:space="preserve">a plane</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
+          <parameter name="offset" transfer-ownership="none">
+            <doc xml:space="preserve">the texture's offset for @plane</doc>
+            <type name="gsize" c:type="gsize"/>
           </parameter>
         </parameters>
       </method>
@@ -16122,6 +17069,26 @@ The rowstride must be set before calling [method@Gdk.MemoryTextureBuilder.build]
           </instance-parameter>
           <parameter name="stride" transfer-ownership="none">
             <doc xml:space="preserve">the stride or 0 to unset</doc>
+            <type name="gsize" c:type="gsize"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_stride_for_plane" c:identifier="gdk_memory_texture_builder_set_stride_for_plane" version="4.20">
+        <doc xml:space="preserve">Sets the stride of the texture for @plane.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">a `GdkMemoryTextureBuilder`</doc>
+            <type name="MemoryTextureBuilder" c:type="GdkMemoryTextureBuilder*"/>
+          </instance-parameter>
+          <parameter name="plane" transfer-ownership="none">
+            <doc xml:space="preserve">a plane</doc>
+            <type name="guint" c:type="unsigned int"/>
+          </parameter>
+          <parameter name="stride" transfer-ownership="none">
+            <doc xml:space="preserve">the texture's stride for @plane</doc>
             <type name="gsize" c:type="gsize"/>
           </parameter>
         </parameters>
@@ -16173,7 +17140,8 @@ See [method@Gdk.MemoryTextureBuilder.set_update_region] for an explanation.</doc
       <method name="set_width" c:identifier="gdk_memory_texture_builder_set_width" glib:set-property="width" version="4.16">
         <doc xml:space="preserve">Sets the width of the texture.
 
-The width must be set before calling [method@Gdk.MemoryTextureBuilder.build].</doc>
+The width must be set before calling [method@Gdk.MemoryTextureBuilder.build]
+and conform to size requirements of the provided format.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -16280,8 +17248,7 @@ of this enumeration. Your code should preserve and ignore them. You can use
       </member>
     </bitfield>
     <class name="Monitor" c:symbol-prefix="monitor" c:type="GdkMonitor" parent="GObject.Object" glib:type-name="GdkMonitor" glib:get-type="gdk_monitor_get_type" glib:type-struct="MonitorClass">
-      <doc xml:space="preserve">`GdkMonitor` objects represent the individual outputs that are
-associated with a `GdkDisplay`.
+      <doc xml:space="preserve">Represents the individual outputs that are associated with a `GdkDisplay`.
 
 `GdkDisplay` keeps a `GListModel` to enumerate and monitor
 monitors with [method@Gdk.Display.get_monitors]. You can use
@@ -16656,8 +17623,7 @@ a pad event.</doc>
       </method>
     </class>
     <interface name="Paintable" c:symbol-prefix="paintable" c:type="GdkPaintable" glib:type-name="GdkPaintable" glib:get-type="gdk_paintable_get_type" glib:type-struct="PaintableInterface">
-      <doc xml:space="preserve">`GdkPaintable` is a simple interface used by GTK to represent content that
-can be painted.
+      <doc xml:space="preserve">An interface for content that can be painted.
 
 The content of a `GdkPaintable` can be painted anywhere at any size
 without requiring any sort of layout. The interface is inspired by
@@ -17259,7 +18225,7 @@ that will make the implementation likely quite slow.</doc>
       </field>
     </record>
     <interface name="Popup" c:symbol-prefix="popup" c:type="GdkPopup" glib:type-name="GdkPopup" glib:get-type="gdk_popup_get_type" glib:type-struct="PopupInterface">
-      <doc xml:space="preserve">A `GdkPopup` is a surface that is attached to another surface.
+      <doc xml:space="preserve">A surface that is attached to another surface.
 
 The `GdkPopup` is positioned relative to its parent surface.
 
@@ -17401,8 +18367,8 @@ the [signal@Gdk.Surface::layout] signal will not me emitted.</doc>
     </interface>
     <record name="PopupInterface" c:type="GdkPopupInterface" disguised="1" opaque="1" glib:is-gtype-struct-for="Popup"/>
     <record name="PopupLayout" c:type="GdkPopupLayout" opaque="1" glib:type-name="GdkPopupLayout" glib:get-type="gdk_popup_layout_get_type" c:symbol-prefix="popup_layout">
-      <doc xml:space="preserve">The `GdkPopupLayout` struct contains information that is
-necessary position a [iface@Gdk.Popup] relative to its parent.
+      <doc xml:space="preserve">Contains information that is necessary position a [iface@Gdk.Popup]
+relative to its parent.
 
 The positioning requires a negotiation with the windowing system,
 since it depends on external constraints, such as the position of
@@ -17453,7 +18419,7 @@ position of surface.</doc>
         </return-value>
         <parameters>
           <parameter name="anchor_rect" transfer-ownership="none">
-            <doc xml:space="preserve">the anchor `GdkRectangle` to align @surface with</doc>
+            <doc xml:space="preserve">the anchor rectangle to align @surface with</doc>
             <type name="Rectangle" c:type="const GdkRectangle*"/>
           </parameter>
           <parameter name="rect_anchor" transfer-ownership="none">
@@ -17474,7 +18440,7 @@ position of surface.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
         </parameters>
@@ -17482,30 +18448,30 @@ position of surface.</doc>
       <method name="equal" c:identifier="gdk_popup_layout_equal">
         <doc xml:space="preserve">Check whether @layout and @other has identical layout properties.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:space="preserve">%TRUE if @layout and @other have identical layout properties,
-  otherwise %FALSE.</doc>
+          <doc xml:space="preserve">true if @layout and @other have identical layout properties,
+  otherwise false.</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
           <parameter name="other" transfer-ownership="none">
-            <doc xml:space="preserve">another `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">another popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </parameter>
         </parameters>
       </method>
       <method name="get_anchor_hints" c:identifier="gdk_popup_layout_get_anchor_hints">
-        <doc xml:space="preserve">Get the `GdkAnchorHints`.</doc>
+        <doc xml:space="preserve">Get the anchor hints.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:space="preserve">the `GdkAnchorHints`</doc>
+          <doc xml:space="preserve">the anchor hints</doc>
           <type name="AnchorHints" c:type="GdkAnchorHints"/>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
         </parameters>
@@ -17518,7 +18484,7 @@ position of surface.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
         </parameters>
@@ -17530,7 +18496,7 @@ position of surface.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
           <parameter name="dx" direction="out" caller-allocates="0" transfer-ownership="full">
@@ -17551,7 +18517,7 @@ position of surface.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
         </parameters>
@@ -17563,7 +18529,7 @@ position of surface.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
           <parameter name="left" direction="out" caller-allocates="0" transfer-ownership="full">
@@ -17592,7 +18558,7 @@ position of surface.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
         </parameters>
@@ -17605,7 +18571,7 @@ position of surface.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
         </parameters>
@@ -17615,19 +18581,19 @@ position of surface.</doc>
 
 The set @anchor_hints determines how @surface will be moved
 if the anchor points cause it to move off-screen. For example,
-%GDK_ANCHOR_FLIP_X will replace %GDK_GRAVITY_NORTH_WEST with
-%GDK_GRAVITY_NORTH_EAST and vice versa if @surface extends
+`GDK_ANCHOR_FLIP_X` will replace `GDK_GRAVITY_NORTH_WEST` with
+`GDK_GRAVITY_NORTH_EAST` and vice versa if @surface extends
 beyond the left or right edges of the monitor.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
           <parameter name="anchor_hints" transfer-ownership="none">
-            <doc xml:space="preserve">the new `GdkAnchorHints`</doc>
+            <doc xml:space="preserve">the new anchor hints</doc>
             <type name="AnchorHints" c:type="GdkAnchorHints"/>
           </parameter>
         </parameters>
@@ -17639,7 +18605,7 @@ beyond the left or right edges of the monitor.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
           <parameter name="anchor_rect" transfer-ownership="none">
@@ -17655,7 +18621,7 @@ beyond the left or right edges of the monitor.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
           <parameter name="dx" transfer-ownership="none">
@@ -17675,7 +18641,7 @@ beyond the left or right edges of the monitor.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
           <parameter name="anchor" transfer-ownership="none">
@@ -17695,7 +18661,7 @@ surrounding the window, would there be any.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
           <parameter name="left" transfer-ownership="none">
@@ -17723,7 +18689,7 @@ surrounding the window, would there be any.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
           <parameter name="anchor" transfer-ownership="none">
@@ -17739,7 +18705,7 @@ surrounding the window, would there be any.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkPopupLayout`</doc>
+            <doc xml:space="preserve">a popup layout</doc>
             <type name="PopupLayout" c:type="GdkPopupLayout*"/>
           </instance-parameter>
         </parameters>
@@ -17749,8 +18715,7 @@ surrounding the window, would there be any.</doc>
       <doc xml:space="preserve">An event related to the proximity of a tool to a device.</doc>
     </class>
     <record name="RGBA" c:type="GdkRGBA" glib:type-name="GdkRGBA" glib:get-type="gdk_rgba_get_type" c:symbol-prefix="rgba">
-      <doc xml:space="preserve">A `GdkRGBA` is used to represent a color, in a way that is compatible
-with cairo&#x2019;s notion of color.
+      <doc xml:space="preserve">Represents a color, in a way that is compatible with cairo&#x2019;s notion of color.
 
 `GdkRGBA` is a convenient way to pass colors around. It&#x2019;s based on
 cairo&#x2019;s way to deal with colors and mirrors its behavior. All values
@@ -17927,7 +18892,7 @@ this is a concern, you should use a different representation.</doc>
       </method>
     </record>
     <record name="Rectangle" c:type="GdkRectangle" glib:type-name="GdkRectangle" glib:get-type="gdk_rectangle_get_type" c:symbol-prefix="rectangle">
-      <doc xml:space="preserve">A `GdkRectangle` data type for representing rectangles.
+      <doc xml:space="preserve">Represents a rectangle.
 
 `GdkRectangle` is identical to `cairo_rectangle_t`. Together with Cairo&#x2019;s
 `cairo_region_t` data type, these are the central types for representing
@@ -18206,8 +19171,7 @@ scale factor and eventually a custom scale factor in your app).</doc>
       </member>
     </enumeration>
     <class name="Seat" c:symbol-prefix="seat" c:type="GdkSeat" parent="GObject.Object" abstract="1" glib:type-name="GdkSeat" glib:get-type="gdk_seat_get_type">
-      <doc xml:space="preserve">The `GdkSeat` object represents a collection of input devices
-that belong to a user.</doc>
+      <doc xml:space="preserve">Represents a collection of input devices that belong to a user.</doc>
       <method name="get_capabilities" c:identifier="gdk_seat_get_capabilities">
         <doc xml:space="preserve">Returns the capabilities this `GdkSeat` currently has.</doc>
         <return-value transfer-ownership="none">
@@ -18418,7 +19382,7 @@ of physical pixels on an output device are laid out.</doc>
       </member>
     </enumeration>
     <class name="Surface" c:symbol-prefix="surface" c:type="GdkSurface" parent="GObject.Object" abstract="1" glib:type-name="GdkSurface" glib:get-type="gdk_surface_get_type" glib:type-struct="SurfaceClass">
-      <doc xml:space="preserve">A `GdkSurface` is a rectangular region on the screen.
+      <doc xml:space="preserve">Represents a rectangular region on the screen.
 
 It&#x2019;s a low-level object, used to implement high-level objects
 such as [GtkWindow](../gtk4/class.Window.html).
@@ -18475,8 +19439,10 @@ emits a short beep on the display just as [method@Gdk.Display.beep].</doc>
           </instance-parameter>
         </parameters>
       </method>
-      <method name="create_cairo_context" c:identifier="gdk_surface_create_cairo_context">
+      <method name="create_cairo_context" c:identifier="gdk_surface_create_cairo_context" deprecated="1" deprecated-version="4.18">
         <doc xml:space="preserve">Creates a new `GdkCairoContext` for rendering on @surface.</doc>
+        <doc-deprecated xml:space="preserve">Drawing content with Cairo should be done via
+  Cairo rendernodes, not by using the Cairo renderer.</doc-deprecated>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">the newly created `GdkCairoContext`</doc>
           <type name="CairoContext" c:type="GdkCairoContext*"/>
@@ -19120,7 +20086,7 @@ Surface size is reported in &#x201D;application pixels&#x201D;, not
       </parameters>
     </function-macro>
     <class name="Texture" c:symbol-prefix="texture" c:type="GdkTexture" parent="GObject.Object" abstract="1" glib:type-name="GdkTexture" glib:get-type="gdk_texture_get_type" glib:type-struct="TextureClass">
-      <doc xml:space="preserve">`GdkTexture` is the basic element used to refer to pixel data.
+      <doc xml:space="preserve">Refers to pixel data in various forms.
 
 It is primarily meant for pixel data that will not change over
 multiple frames, and will be used for a long time.
@@ -19149,12 +20115,14 @@ data.</doc>
       <implements name="Paintable"/>
       <implements name="Gio.Icon"/>
       <implements name="Gio.LoadableIcon"/>
-      <constructor name="new_for_pixbuf" c:identifier="gdk_texture_new_for_pixbuf">
+      <constructor name="new_for_pixbuf" c:identifier="gdk_texture_new_for_pixbuf" deprecated="1" deprecated-version="4.20">
         <doc xml:space="preserve">Creates a new texture object representing the `GdkPixbuf`.
 
 This function is threadsafe, so that you can e.g. use GTask
-and [method@Gio.Task.run_in_thread] to avoid blocking the main thread
-while loading a big image.</doc>
+and [method@Gio.Task.run_in_thread] to avoid blocking the main
+thread while loading a big image.</doc>
+        <doc-deprecated xml:space="preserve">Use e.g. libglycin, which can load many image
+  formats into a `GdkTexture`</doc-deprecated>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new `GdkTexture`</doc>
           <type name="Texture" c:type="GdkTexture*"/>
@@ -19172,11 +20140,16 @@ while loading a big image.</doc>
 The file format is detected automatically. The supported formats
 are PNG, JPEG and TIFF, though more formats might be available.
 
-If %NULL is returned, then @error will be set.
+If `NULL` is returned, then @error will be set.
 
 This function is threadsafe, so that you can e.g. use GTask
 and [method@Gio.Task.run_in_thread] to avoid blocking the main thread
-while loading a big image.</doc>
+while loading a big image.
+
+::: warning
+    Note that this function should not be used with untrusted data.
+    Use a proper image loading framework such as libglycin, which can
+    load many image formats into a `GdkTexture`.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">A newly-created `GdkTexture`</doc>
           <type name="Texture" c:type="GdkTexture*"/>
@@ -19194,11 +20167,16 @@ while loading a big image.</doc>
 The file format is detected automatically. The supported formats
 are PNG, JPEG and TIFF, though more formats might be available.
 
-If %NULL is returned, then @error will be set.
+If `NULL` is returned, then @error will be set.
 
 This function is threadsafe, so that you can e.g. use GTask
 and [method@Gio.Task.run_in_thread] to avoid blocking the main thread
-while loading a big image.</doc>
+while loading a big image.
+
+::: warning
+    Note that this function should not be used with untrusted data.
+    Use a proper image loading framework such as libglycin, which can
+    load many image formats into a `GdkTexture`.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">A newly-created `GdkTexture`</doc>
           <type name="Texture" c:type="GdkTexture*"/>
@@ -19216,11 +20194,16 @@ while loading a big image.</doc>
 The file format is detected automatically. The supported formats
 are PNG, JPEG and TIFF, though more formats might be available.
 
-If %NULL is returned, then @error will be set.
+If `NULL` is returned, then @error will be set.
 
 This function is threadsafe, so that you can e.g. use GTask
 and [method@Gio.Task.run_in_thread] to avoid blocking the main thread
-while loading a big image.</doc>
+while loading a big image.
+
+::: warning
+    Note that this function should not be used with untrusted data.
+    Use a proper image loading framework such as libglycin, which can
+    load many image formats into a `GdkTexture`.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">A newly-created `GdkTexture`</doc>
           <type name="Texture" c:type="GdkTexture*"/>
@@ -19236,7 +20219,7 @@ while loading a big image.</doc>
         <doc xml:space="preserve">Creates a new texture by loading an image from a resource.
 
 The file format is detected automatically. The supported formats
-are PNG and JPEG, though more formats might be available.
+are PNG, JPEG and TIFF, though more formats might be available.
 
 It is a fatal error if @resource_path does not specify a valid
 image resource and the program will abort if that happens.
@@ -19366,9 +20349,9 @@ downloading the texture.</doc>
 
 This is a utility function intended for debugging and testing.
 If you want more control over formats, proper error handling or
-want to store to a [iface@Gio.File] or other location, you might want to
-use [method@Gdk.Texture.save_to_png_bytes] or look into the
-gdk-pixbuf library.</doc>
+want to store to a [iface@Gio.File] or other location, you might
+want to use [method@Gdk.Texture.save_to_png_bytes] or look into
+the libglycin library.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">%TRUE if saving succeeded, %FALSE on failure.</doc>
           <type name="gboolean" c:type="gboolean"/>
@@ -19394,7 +20377,7 @@ portable way to do that.
 
 If you need more control over the generated image, such as
 attaching metadata, you should look into an image handling
-library such as the gdk-pixbuf library.
+library such as the libglycin library.
 
 If you are dealing with high dynamic range float data, you
 might also want to consider [method@Gdk.Texture.save_to_tiff_bytes]
@@ -19468,8 +20451,7 @@ use [method@Gdk.Texture.save_to_png_bytes].</doc>
     </class>
     <record name="TextureClass" c:type="GdkTextureClass" disguised="1" opaque="1" glib:is-gtype-struct-for="Texture"/>
     <record name="TextureDownloader" c:type="GdkTextureDownloader" opaque="1" version="4.10" glib:type-name="GdkTextureDownloader" glib:get-type="gdk_texture_downloader_get_type" c:symbol-prefix="texture_downloader">
-      <doc xml:space="preserve">The `GdkTextureDownloader` is used to download the contents of a
-[class@Gdk.Texture].
+      <doc xml:space="preserve">Used to download the contents of a [class@Gdk.Texture].
 
 It is intended to be created as a short-term object for a single download,
 but can be used for multiple downloads of different textures or with different
@@ -19516,7 +20498,10 @@ be stored in the stride value.
 This function will abort if it tries to download a large texture and
 fails to allocate memory. If you think that may happen, you should handle
 memory allocation yourself and use [method@Gdk.TextureDownloader.download_into]
-once allocation succeeded.</doc>
+once allocation succeeded.
+
+This function cannot be used with a multiplanar format. Use
+[method@Gdk.TextureDownloader.download_bytes_with_planes] for that purpose.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">The downloaded pixels</doc>
           <type name="GLib.Bytes" c:type="GBytes*"/>
@@ -19532,8 +20517,41 @@ once allocation succeeded.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="download_bytes_with_planes" c:identifier="gdk_texture_downloader_download_bytes_with_planes" version="4.20">
+        <doc xml:space="preserve">Downloads the given texture pixels into a `GBytes`. The offsets and
+strides of the resulting buffer will be stored in the respective values.
+
+If the format does have less than 4 planes, the remaining offsets and strides will be
+set to `0`.</doc>
+        <return-value transfer-ownership="full">
+          <doc xml:space="preserve">The downloaded pixels</doc>
+          <type name="GLib.Bytes" c:type="GBytes*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="self" transfer-ownership="none">
+            <doc xml:space="preserve">the downloader</doc>
+            <type name="TextureDownloader" c:type="const GdkTextureDownloader*"/>
+          </instance-parameter>
+          <parameter name="out_offsets" direction="out" caller-allocates="1" transfer-ownership="none">
+            <doc xml:space="preserve">
+  The offsets of the resulting data planes in bytes</doc>
+            <array zero-terminated="0" c:type="gsize*" fixed-size="4">
+              <type name="gsize" c:type="gsize"/>
+            </array>
+          </parameter>
+          <parameter name="out_strides" direction="out" caller-allocates="1" transfer-ownership="none">
+            <doc xml:space="preserve">
+  The stride of the resulting data planes in bytes</doc>
+            <array zero-terminated="0" c:type="gsize*" fixed-size="4">
+              <type name="gsize" c:type="gsize"/>
+            </array>
+          </parameter>
+        </parameters>
+      </method>
       <method name="download_into" c:identifier="gdk_texture_downloader_download_into" version="4.10">
-        <doc xml:space="preserve">Downloads the @texture into local memory.</doc>
+        <doc xml:space="preserve">Downloads the @texture into local memory.
+
+This function cannot be used with a multiplanar format.</doc>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -19684,7 +20702,7 @@ By default, GDK_MEMORY_DEFAULT is set.</doc>
       </function>
     </enumeration>
     <record name="TimeCoord" c:type="GdkTimeCoord">
-      <doc xml:space="preserve">A `GdkTimeCoord` stores a single event in a motion history.
+      <doc xml:space="preserve">Stores a single event in a motion history.
 
 To check whether an axis is present, check whether the corresponding
 flag from the [flags@Gdk.AxisFlags] enumeration is set in the @flags
@@ -19719,7 +20737,7 @@ the [enum@Gdk.AxisUse] enumerations as indices.</doc>
       </member>
     </enumeration>
     <interface name="Toplevel" c:symbol-prefix="toplevel" c:type="GdkToplevel" glib:type-name="GdkToplevel" glib:get-type="gdk_toplevel_get_type" glib:type-struct="ToplevelInterface">
-      <doc xml:space="preserve">A `GdkToplevel` is a freestanding toplevel surface.
+      <doc xml:space="preserve">A freestanding toplevel surface.
 
 The `GdkToplevel` interface provides useful APIs for interacting with
 the windowing system, such as controlling maximization and size of the
@@ -19817,6 +20835,32 @@ calling this function.</doc>
             <doc xml:space="preserve">timestamp of the event triggering the surface focus</doc>
             <type name="guint32" c:type="guint32"/>
           </parameter>
+        </parameters>
+      </method>
+      <method name="get_capabilities" c:identifier="gdk_toplevel_get_capabilities" glib:get-property="capabilities" version="4.20">
+        <doc xml:space="preserve">The capabilities that are available for this toplevel.</doc>
+        <return-value transfer-ownership="none">
+          <type name="ToplevelCapabilities" c:type="GdkToplevelCapabilities"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="toplevel" transfer-ownership="none">
+            <doc xml:space="preserve">a `GdkToplevel`</doc>
+            <type name="Toplevel" c:type="GdkToplevel*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
+      <method name="get_gravity" c:identifier="gdk_toplevel_get_gravity" glib:get-property="gravity" version="4.20">
+        <doc xml:space="preserve">Returns the gravity that is used when changing the toplevel
+size programmatically.</doc>
+        <return-value transfer-ownership="none">
+          <doc xml:space="preserve">the gravity</doc>
+          <type name="Gravity" c:type="GdkGravity"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="toplevel" transfer-ownership="none">
+            <doc xml:space="preserve">a toplevel</doc>
+            <type name="Toplevel" c:type="GdkToplevel*"/>
+          </instance-parameter>
         </parameters>
       </method>
       <method name="get_state" c:identifier="gdk_toplevel_get_state" glib:get-property="state">
@@ -19977,6 +21021,23 @@ that it should offer the user a way to close the surface.</doc>
           <parameter name="deletable" transfer-ownership="none">
             <doc xml:space="preserve">%TRUE to request a delete button</doc>
             <type name="gboolean" c:type="gboolean"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_gravity" c:identifier="gdk_toplevel_set_gravity" glib:set-property="gravity" version="4.20">
+        <doc xml:space="preserve">Sets the gravity that is used when changing the toplevel
+size programmatically.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="toplevel" transfer-ownership="none">
+            <doc xml:space="preserve">a toplevel</doc>
+            <type name="Toplevel" c:type="GdkToplevel*"/>
+          </instance-parameter>
+          <parameter name="gravity" transfer-ownership="none">
+            <doc xml:space="preserve">the new gravity</doc>
+            <type name="Gravity" c:type="GdkGravity"/>
           </parameter>
         </parameters>
       </method>
@@ -20147,6 +21208,10 @@ tiled window states.</doc>
           </parameter>
         </parameters>
       </method>
+      <property name="capabilities" version="4.20" transfer-ownership="none" getter="get_capabilities" default-value="0">
+        <doc xml:space="preserve">The capabilities that are available for this toplevel.</doc>
+        <type name="ToplevelCapabilities"/>
+      </property>
       <property name="decorated" writable="1" transfer-ownership="none" setter="set_decorated" default-value="FALSE">
         <doc xml:space="preserve">Whether the window manager should add decorations.</doc>
         <type name="gboolean" c:type="gboolean"/>
@@ -20158,6 +21223,19 @@ tiled window states.</doc>
       <property name="fullscreen-mode" writable="1" transfer-ownership="none" default-value="GDK_FULLSCREEN_ON_CURRENT_MONITOR">
         <doc xml:space="preserve">The fullscreen mode of the surface.</doc>
         <type name="FullscreenMode"/>
+      </property>
+      <property name="gravity" version="4.20" writable="1" transfer-ownership="none" setter="set_gravity" getter="get_gravity" default-value="GDK_GRAVITY_NORTH_EAST">
+        <doc xml:space="preserve">The gravity to use when resizing a surface programmatically.
+
+Gravity describes which point of the surface we want to keep
+fixed (meaning that the surface will grow in the opposite direction).
+For example, a gravity of `GDK_GRAVITY_NORTH_EAST` means that we
+want to fix top right corner of the surface.
+
+This property is just a hint that may affect the result when negotiating
+toplevel sizes with the windowing system. It does not affect interactive
+resizes started with [method@Gdk.Toplevel.begin_resize].</doc>
+        <type name="Gravity"/>
       </property>
       <property name="icon-list" writable="1" transfer-ownership="none" setter="set_icon_list">
         <doc xml:space="preserve">A list of textures to use as icon.</doc>
@@ -20215,10 +21293,42 @@ will result in an arbitrary size being used as a result.</doc>
         </parameters>
       </glib:signal>
     </interface>
+    <bitfield name="ToplevelCapabilities" version="4.20" glib:type-name="GdkToplevelCapabilities" glib:get-type="gdk_toplevel_capabilities_get_type" c:type="GdkToplevelCapabilities">
+      <doc xml:space="preserve">Reflects what features a `GdkToplevel` supports.</doc>
+      <member name="edge_constraints" value="1" c:identifier="GDK_TOPLEVEL_CAPABILITIES_EDGE_CONSTRAINTS" version="4.20" glib:nick="edge-constraints" glib:name="GDK_TOPLEVEL_CAPABILITIES_EDGE_CONSTRAINTS">
+        <doc xml:space="preserve">Whether tiled window states are supported.</doc>
+      </member>
+      <member name="inhibit_shortcuts" value="2" c:identifier="GDK_TOPLEVEL_CAPABILITIES_INHIBIT_SHORTCUTS" version="4.20" glib:nick="inhibit-shortcuts" glib:name="GDK_TOPLEVEL_CAPABILITIES_INHIBIT_SHORTCUTS">
+        <doc xml:space="preserve">Whether inhibiting system shortcuts is supported.
+See [method@Gdk.Toplevel.inhibit_system_shortcuts].</doc>
+      </member>
+      <member name="titlebar_gestures" value="4" c:identifier="GDK_TOPLEVEL_CAPABILITIES_TITLEBAR_GESTURES" version="4.20" glib:nick="titlebar-gestures" glib:name="GDK_TOPLEVEL_CAPABILITIES_TITLEBAR_GESTURES">
+        <doc xml:space="preserve">Whether titlebar gestures are supported.
+See [method@Gdk.Toplevel.titlebar_gesture].</doc>
+      </member>
+      <member name="window_menu" value="8" c:identifier="GDK_TOPLEVEL_CAPABILITIES_WINDOW_MENU" version="4.20" glib:nick="window-menu" glib:name="GDK_TOPLEVEL_CAPABILITIES_WINDOW_MENU">
+        <doc xml:space="preserve">Whether showing the window menu is supported.
+See [method@Gdk.Toplevel.show_window_menu].</doc>
+      </member>
+      <member name="maximize" value="16" c:identifier="GDK_TOPLEVEL_CAPABILITIES_MAXIMIZE" version="4.20" glib:nick="maximize" glib:name="GDK_TOPLEVEL_CAPABILITIES_MAXIMIZE">
+        <doc xml:space="preserve">Whether the toplevel can be maximized.</doc>
+      </member>
+      <member name="fullscreen" value="32" c:identifier="GDK_TOPLEVEL_CAPABILITIES_FULLSCREEN" version="4.20" glib:nick="fullscreen" glib:name="GDK_TOPLEVEL_CAPABILITIES_FULLSCREEN">
+        <doc xml:space="preserve">Whether the toplevel can be made fullscreen.</doc>
+      </member>
+      <member name="minimize" value="64" c:identifier="GDK_TOPLEVEL_CAPABILITIES_MINIMIZE" version="4.20" glib:nick="minimize" glib:name="GDK_TOPLEVEL_CAPABILITIES_MINIMIZE">
+        <doc xml:space="preserve">Whether the toplevel can be minimized.
+See [method@Gdk.Toplevel.minimize].</doc>
+      </member>
+      <member name="lower" value="128" c:identifier="GDK_TOPLEVEL_CAPABILITIES_LOWER" version="4.20" glib:nick="lower" glib:name="GDK_TOPLEVEL_CAPABILITIES_LOWER">
+        <doc xml:space="preserve">Whether the toplevel can be lowered.
+See [method@Gdk.Toplevel.lower].</doc>
+      </member>
+    </bitfield>
     <record name="ToplevelInterface" c:type="GdkToplevelInterface" disguised="1" opaque="1" glib:is-gtype-struct-for="Toplevel"/>
     <record name="ToplevelLayout" c:type="GdkToplevelLayout" opaque="1" glib:type-name="GdkToplevelLayout" glib:get-type="gdk_toplevel_layout_get_type" c:symbol-prefix="toplevel_layout">
-      <doc xml:space="preserve">The `GdkToplevelLayout` struct contains information that
-is necessary to present a sovereign window on screen.
+      <doc xml:space="preserve">Contains information that is necessary to present a sovereign
+window on screen.
 
 The `GdkToplevelLayout` struct is necessary for using
 [method@Gdk.Toplevel.present].
@@ -20229,11 +21339,11 @@ etc).</doc>
       <constructor name="new" c:identifier="gdk_toplevel_layout_new">
         <doc xml:space="preserve">Create a toplevel layout description.
 
-Used together with gdk_toplevel_present() to describe
+Used together with [method@Gdk.Toplevel.present] to describe
 how a toplevel surface should be placed and behave on-screen.
 
 The size is in &#x201D;application pixels&#x201D;, not
-&#x201D;device pixels&#x201D; (see gdk_surface_get_scale_factor()).</doc>
+&#x201D;device pixels&#x201D; (see [method@Gdk.Surface.get_scale]).</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">newly created instance of `GdkToplevelLayout`</doc>
           <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
@@ -20247,7 +21357,7 @@ The size is in &#x201D;application pixels&#x201D;, not
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
         </parameters>
@@ -20255,32 +21365,32 @@ The size is in &#x201D;application pixels&#x201D;, not
       <method name="equal" c:identifier="gdk_toplevel_layout_equal">
         <doc xml:space="preserve">Check whether @layout and @other has identical layout properties.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:space="preserve">%TRUE if @layout and @other have identical layout properties,
-  otherwise %FALSE.</doc>
+          <doc xml:space="preserve">true if @layout and @other have identical layout properties,
+  otherwise false.</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
           <parameter name="other" transfer-ownership="none">
-            <doc xml:space="preserve">another `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">another toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </parameter>
         </parameters>
       </method>
       <method name="get_fullscreen" c:identifier="gdk_toplevel_layout_get_fullscreen">
         <doc xml:space="preserve">If the layout specifies whether to the toplevel should go fullscreen,
-the value pointed to by @fullscreen is set to %TRUE if it should go
-fullscreen, or %FALSE, if it should go unfullscreen.</doc>
+the value pointed to by @fullscreen is set to true if it should go
+fullscreen, or false, if it should go unfullscreen.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">whether the @layout specifies the fullscreen state for the toplevel</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a ``GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
           <parameter name="fullscreen" direction="out" caller-allocates="0" transfer-ownership="full">
@@ -20298,26 +21408,26 @@ the surface on.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
         </parameters>
       </method>
       <method name="get_maximized" c:identifier="gdk_toplevel_layout_get_maximized">
         <doc xml:space="preserve">If the layout specifies whether to the toplevel should go maximized,
-the value pointed to by @maximized is set to %TRUE if it should go
-fullscreen, or %FALSE, if it should go unmaximized.</doc>
+the value pointed to by @maximized is set to true if it should go
+maximized, or false, if it should go unmaximized.</doc>
         <return-value transfer-ownership="none">
           <doc xml:space="preserve">whether the @layout specifies the maximized state for the toplevel</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
           <parameter name="maximized" direction="out" caller-allocates="0" transfer-ownership="full">
-            <doc xml:space="preserve">set to %TRUE if the toplevel should be maximized</doc>
+            <doc xml:space="preserve">set to true if the toplevel should be maximized</doc>
             <type name="gboolean" c:type="gboolean*"/>
           </parameter>
         </parameters>
@@ -20326,12 +21436,12 @@ fullscreen, or %FALSE, if it should go unmaximized.</doc>
         <doc xml:space="preserve">Returns whether the layout should allow the user
 to resize the surface.</doc>
         <return-value transfer-ownership="none">
-          <doc xml:space="preserve">%TRUE if the layout is resizable</doc>
+          <doc xml:space="preserve">true if the layout is resizable</doc>
           <type name="gboolean" c:type="gboolean"/>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
         </parameters>
@@ -20344,7 +21454,7 @@ to resize the surface.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
         </parameters>
@@ -20357,11 +21467,11 @@ to be fullscreen when presented.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
           <parameter name="fullscreen" transfer-ownership="none">
-            <doc xml:space="preserve">%TRUE to fullscreen the surface</doc>
+            <doc xml:space="preserve">true to fullscreen the surface</doc>
             <type name="gboolean" c:type="gboolean"/>
           </parameter>
           <parameter name="monitor" transfer-ownership="none" nullable="1" allow-none="1">
@@ -20378,11 +21488,11 @@ to be maximized when presented.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
           <parameter name="maximized" transfer-ownership="none">
-            <doc xml:space="preserve">%TRUE to maximize</doc>
+            <doc xml:space="preserve">true to maximize</doc>
             <type name="gboolean" c:type="gboolean"/>
           </parameter>
         </parameters>
@@ -20395,11 +21505,11 @@ to resize the surface after it has been presented.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
           <parameter name="resizable" transfer-ownership="none">
-            <doc xml:space="preserve">%TRUE to allow resizing</doc>
+            <doc xml:space="preserve">true to allow resizing</doc>
             <type name="gboolean" c:type="gboolean"/>
           </parameter>
         </parameters>
@@ -20411,15 +21521,14 @@ to resize the surface after it has been presented.</doc>
         </return-value>
         <parameters>
           <instance-parameter name="layout" transfer-ownership="none">
-            <doc xml:space="preserve">a `GdkToplevelLayout`</doc>
+            <doc xml:space="preserve">a toplevel layout</doc>
             <type name="ToplevelLayout" c:type="GdkToplevelLayout*"/>
           </instance-parameter>
         </parameters>
       </method>
     </record>
     <record name="ToplevelSize" c:type="GdkToplevelSize" disguised="1" opaque="1" glib:type-name="GdkToplevelSize" glib:get-type="gdk_toplevel_size_get_type" c:symbol-prefix="toplevel_size">
-      <doc xml:space="preserve">The `GdkToplevelSize` struct contains information that is useful
-to compute the size of a toplevel.</doc>
+      <doc xml:space="preserve">Contains information that is useful to compute the size of a toplevel.</doc>
       <method name="get_bounds" c:identifier="gdk_toplevel_size_get_bounds">
         <doc xml:space="preserve">Retrieves the bounds the toplevel is placed within.
 
@@ -20732,8 +21841,7 @@ progress of the gesture.</doc>
       </parameters>
     </function-macro>
     <class name="VulkanContext" c:symbol-prefix="vulkan_context" c:type="GdkVulkanContext" deprecated="1" deprecated-version="4.14" parent="DrawContext" abstract="1" glib:type-name="GdkVulkanContext" glib:get-type="gdk_vulkan_context_get_type">
-      <doc xml:space="preserve">`GdkVulkanContext` is an object representing the platform-specific
-Vulkan draw context.
+      <doc xml:space="preserve">Represents the platform-specific Vulkan draw context.
 
 `GdkVulkanContext`s are created for a surface using
 [method@Gdk.Surface.create_vulkan_context], and the context will match
@@ -20743,7 +21851,6 @@ Support for `GdkVulkanContext` is platform-specific and context creation
 can fail, returning %NULL context.</doc>
       <doc-deprecated xml:space="preserve">GTK does not expose any Vulkan internals. This
   struct is a leftover that was accidentally exposed.</doc-deprecated>
-      <implements name="Gio.Initable"/>
       <glib:signal name="images-updated" when="last">
         <doc xml:space="preserve">Emitted when the images managed by this context have changed.
 
@@ -20772,7 +21879,7 @@ for example in response to a change of the surface size.</doc>
       </function>
     </enumeration>
     <function name="cairo_draw_from_gl" c:identifier="gdk_cairo_draw_from_gl" deprecated="1" deprecated-version="4.6">
-      <doc xml:space="preserve">The main way to not draw GL content in GTK.
+      <doc xml:space="preserve">Draws GL content onto a cairo context.
 
 It takes a render buffer ID (@source_type == GL_RENDERBUFFER) or a texture
 id (@source_type == GL_TEXTURE) and draws it onto @cr with an OVER operation,
@@ -20886,11 +21993,12 @@ set with cairo_surface_set_device_offset().</doc>
         </parameter>
       </parameters>
     </function>
-    <function name="cairo_set_source_pixbuf" c:identifier="gdk_cairo_set_source_pixbuf">
+    <function name="cairo_set_source_pixbuf" c:identifier="gdk_cairo_set_source_pixbuf" deprecated="1" deprecated-version="4.20">
       <doc xml:space="preserve">Sets the given pixbuf as the source pattern for @cr.
 
 The pattern has an extend mode of %CAIRO_EXTEND_NONE and is aligned
 so that the origin of @pixbuf is @pixbuf_x, @pixbuf_y.</doc>
+      <doc-deprecated xml:space="preserve">Use cairo_set_source_surface() and gdk_texture_download()</doc-deprecated>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -21008,9 +22116,9 @@ for details about this colorstate.</doc>
       </return-value>
     </function>
     <function name="content_deserialize_async" c:identifier="gdk_content_deserialize_async">
-      <doc xml:space="preserve">Read content from the given input stream and deserialize it, asynchronously.
+      <doc xml:space="preserve">Reads content from the given input stream and deserialize it, asynchronously.
 
-The default I/O priority is %G_PRIORITY_DEFAULT (i.e. 0), and lower numbers
+The default I/O priority is `G_PRIORITY_DEFAULT` (i.e. 0), and lower numbers
 indicate a higher priority.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
@@ -21086,7 +22194,11 @@ is returned.</doc>
       </parameters>
     </function>
     <function name="content_register_deserializer" c:identifier="gdk_content_register_deserializer">
-      <doc xml:space="preserve">Registers a function to deserialize object of a given type.</doc>
+      <doc xml:space="preserve">Registers a function to deserialize object of a given type.
+
+Since 4.20, when looking up a deserializer to use, GTK will
+use the last registered deserializer for a given mime type,
+so applications can override the built-in deserializers.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -21114,7 +22226,11 @@ is returned.</doc>
       </parameters>
     </function>
     <function name="content_register_serializer" c:identifier="gdk_content_register_serializer">
-      <doc xml:space="preserve">Registers a function to serialize objects of a given type.</doc>
+      <doc xml:space="preserve">Registers a function to serialize objects of a given type.
+
+Since 4.20, when looking up a serializer to use, GTK will
+use the last registered serializer for a given mime type,
+so applications can override the built-in serializers.</doc>
       <return-value transfer-ownership="none">
         <type name="none" c:type="void"/>
       </return-value>
@@ -21351,7 +22467,7 @@ The names are the same as those in the
 `gdk/gdkkeysyms.h` header file
 but without the leading &#x201C;GDK_KEY_&#x201D;.</doc>
       <return-value transfer-ownership="none">
-        <doc xml:space="preserve">the corresponding key value, or %GDK_KEY_VoidSymbol
+        <doc xml:space="preserve">the corresponding key value, or `GDK_KEY_VoidSymbol`
   if the key name is not a valid key</doc>
         <type name="guint" c:type="guint"/>
       </return-value>
@@ -21363,9 +22479,9 @@ but without the leading &#x201C;GDK_KEY_&#x201D;.</doc>
       </parameters>
     </function>
     <function name="keyval_is_lower" c:identifier="gdk_keyval_is_lower">
-      <doc xml:space="preserve">Returns %TRUE if the given key value is in lower case.</doc>
+      <doc xml:space="preserve">Returns true if the given key value is in lower case.</doc>
       <return-value transfer-ownership="none">
-        <doc xml:space="preserve">%TRUE if @keyval is in lower case, or if @keyval is not
+        <doc xml:space="preserve">true if @keyval is in lower case, or if @keyval is not
   subject to case conversion.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
@@ -21377,9 +22493,9 @@ but without the leading &#x201C;GDK_KEY_&#x201D;.</doc>
       </parameters>
     </function>
     <function name="keyval_is_upper" c:identifier="gdk_keyval_is_upper">
-      <doc xml:space="preserve">Returns %TRUE if the given key value is in upper case.</doc>
+      <doc xml:space="preserve">Returns true if the given key value is in upper case.</doc>
       <return-value transfer-ownership="none">
-        <doc xml:space="preserve">%TRUE if @keyval is in upper case, or if @keyval is not subject to
+        <doc xml:space="preserve">true if @keyval is in upper case, or if @keyval is not subject to
  case conversion.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
@@ -21423,12 +22539,12 @@ but without the leading &#x201C;GDK_KEY_&#x201D;.</doc>
       </parameters>
     </function>
     <function name="keyval_to_unicode" c:identifier="gdk_keyval_to_unicode">
-      <doc xml:space="preserve">Convert from a GDK key symbol to the corresponding Unicode
+      <doc xml:space="preserve">Converts from a GDK key symbol to the corresponding Unicode
 character.
 
 Note that the conversion does not take the current locale
 into consideration, which might be expected for particular
-keyvals, such as %GDK_KEY_KP_Decimal.</doc>
+keyvals, such as `GDK_KEY_KP_Decimal`.</doc>
       <return-value transfer-ownership="none">
         <doc xml:space="preserve">the corresponding unicode character, or 0 if there
   is no corresponding character.</doc>
@@ -21671,10 +22787,10 @@ in order to take effect.</doc>
       </return-value>
     </function>
     <function name="unicode_to_keyval" c:identifier="gdk_unicode_to_keyval">
-      <doc xml:space="preserve">Convert from a Unicode character to a key symbol.</doc>
+      <doc xml:space="preserve">Converts from a Unicode character to a key symbol.</doc>
       <return-value transfer-ownership="none">
-        <doc xml:space="preserve">the corresponding GDK key symbol, if one exists.
-  or, if there is no corresponding symbol, wc | 0x01000000</doc>
+        <doc xml:space="preserve">the corresponding GDK key symbol, if one exists,
+  or, if there is no corresponding symbol, `wc | 0x01000000`</doc>
         <type name="guint" c:type="guint"/>
       </return-value>
       <parameters>

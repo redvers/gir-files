@@ -2,13 +2,14 @@
 <!-- This file was automatically generated from C sources - DO NOT EDIT!
 To affect the contents of this file, edit the original C definitions,
 and/or use gtk-doc annotations.  -->
-<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
+<repository xmlns="http://www.gtk.org/introspection/core/1.0" xmlns:c="http://www.gtk.org/introspection/c/1.0" xmlns:doc="http://www.gtk.org/introspection/doc/1.0" xmlns:glib="http://www.gtk.org/introspection/glib/1.0" version="1.2">
   <include name="GObject" version="2.0"/>
   <include name="Gio" version="2.0"/>
   <include name="HarfBuzz" version="0.0"/>
   <include name="cairo" version="1.0"/>
   <package name="pango"/>
   <c:include name="pango/pango.h"/>
+  <doc:format name="unknown"/>
   <namespace name="Pango" version="1.0" shared-library="libpango-1.0.so.0" c:identifier-prefixes="Pango" c:symbol-prefixes="pango">
     <alias name="Glyph" c:type="PangoGlyph">
       <doc xml:space="preserve">A `PangoGlyph` represents a single glyph in the output form of a string.</doc>
@@ -751,11 +752,13 @@ This mode is useful for merging two lists of attributes together.</doc>
 In the resulting string, serialized attributes are separated by newlines or commas.
 Individual attributes are serialized to a string of the form
 
-  START END TYPE VALUE
+    [START END] TYPE VALUE
 
 Where START and END are the indices (with -1 being accepted in place
 of MAXUINT), TYPE is the nickname of the attribute value type, e.g.
 _weight_ or _stretch_, and the value is serialized according to its type:
+
+Optionally, START and END can be omitted to indicate unlimited extent.
 
 - enum values as nick or numeric value
 - boolean values as _true_ or _false_
@@ -768,14 +771,12 @@ _weight_ or _stretch_, and the value is serialized according to its type:
 
 Examples:
 
-```
-0 10 foreground red, 5 15 weight bold, 0 200 font-desc "Sans 10"
-```
+    0 10 foreground red, 5 15 weight bold, 0 200 font-desc "Sans 10"
 
-```
-0 -1 weight 700
-0 100 family Times
-```
+    0 -1 weight 700
+    0 100 family Times
+
+    weight bold
 
 To parse the returned value, use [func@Pango.AttrList.from_string].
 
@@ -1173,7 +1174,7 @@ by using [func@Pango.AttrType.get_name].</doc>
         </parameters>
       </function>
     </enumeration>
-    <record name="Attribute" c:type="PangoAttribute" glib:type-name="PangoAttribute" glib:get-type="pango_attribute_get_type" c:symbol-prefix="attribute">
+    <record name="Attribute" c:type="PangoAttribute" copy-function="pango_attribute_copy" free-function="pango_attribute_destroy" glib:type-name="PangoAttribute" glib:get-type="pango_attribute_get_type" c:symbol-prefix="attribute">
       <doc xml:space="preserve">The `PangoAttribute` structure represents the common portions of all
 attributes.
 
@@ -2507,8 +2508,9 @@ with an ellipsis.</doc>
     <class name="Font" c:symbol-prefix="font" c:type="PangoFont" parent="GObject.Object" abstract="1" glib:type-name="PangoFont" glib:get-type="pango_font_get_type" glib:type-struct="FontClass">
       <doc xml:space="preserve">A `PangoFont` is used to represent a font in a
 rendering-system-independent manner.</doc>
-      <function name="descriptions_free" c:identifier="pango_font_descriptions_free">
+      <function name="descriptions_free" c:identifier="pango_font_descriptions_free" deprecated="1" deprecated-version="1.56">
         <doc xml:space="preserve">Frees an array of font descriptions.</doc>
+        <doc-deprecated xml:space="preserve">Just use pango_font_description_free in a loop</doc-deprecated>
         <return-value transfer-ownership="none">
           <type name="none" c:type="void"/>
         </return-value>
@@ -3260,6 +3262,23 @@ See [method@Pango.FontDescription.set_family].</doc>
           </instance-parameter>
         </parameters>
       </method>
+      <method name="get_features" c:identifier="pango_font_description_get_features" version="1.56">
+        <doc xml:space="preserve">Gets the features field of a font description.
+
+See [method@Pango.FontDescription.set_features].</doc>
+        <return-value transfer-ownership="none" nullable="1">
+          <doc xml:space="preserve">the features field for the font
+  description, or %NULL if not previously set. This has the same
+  life-time as the font description itself and should not be freed.</doc>
+          <type name="utf8" c:type="const char*"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="desc" transfer-ownership="none">
+            <doc xml:space="preserve">a `PangoFontDescription`</doc>
+            <type name="FontDescription" c:type="const PangoFontDescription*"/>
+          </instance-parameter>
+        </parameters>
+      </method>
       <method name="get_gravity" c:identifier="pango_font_description_get_gravity" version="1.16">
         <doc xml:space="preserve">Gets the gravity field of a font description.
 
@@ -3556,6 +3575,68 @@ string such as a C string literal, or if @desc is only needed temporarily.</doc>
           </parameter>
         </parameters>
       </method>
+      <method name="set_features" c:identifier="pango_font_description_set_features" version="1.56">
+        <doc xml:space="preserve">Sets the features field of a font description.
+
+OpenType font features allow to enable or disable certain optional
+features of a font, such as tabular numbers.
+
+The format of the features string is comma-separated list of
+feature assignments, with each assignment being one of these forms:
+
+    FEATURE=n
+
+where FEATURE must be a 4 character tag that identifies and OpenType
+feature, and n an integer (depending on the feature, the allowed
+values may be 0, 1 or bigger numbers). Unknown features are ignored.
+
+Note that font features set in this way are enabled for the entire text
+that is using the font, which is not appropriate for all OpenType features.
+The intended use case is to select character variations (features cv01 - c99),
+style sets (ss01 - ss20) and the like.
+
+Pango does not currently have a way to find supported OpenType features
+of a font. Both harfbuzz and freetype have API for this. See for example
+[hb_ot_layout_table_get_feature_tags](https://harfbuzz.github.io/harfbuzz-hb-ot-layout.html#hb-ot-layout-table-get-feature-tags).
+
+Features that are not supported by the font are silently ignored.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="desc" transfer-ownership="none">
+            <doc xml:space="preserve">a `PangoFontDescription`.</doc>
+            <type name="FontDescription" c:type="PangoFontDescription*"/>
+          </instance-parameter>
+          <parameter name="features" transfer-ownership="none" nullable="1" allow-none="1">
+            <doc xml:space="preserve">a string representing the features</doc>
+            <type name="utf8" c:type="const char*"/>
+          </parameter>
+        </parameters>
+      </method>
+      <method name="set_features_static" c:identifier="pango_font_description_set_features_static" version="1.56">
+        <doc xml:space="preserve">Sets the features field of a font description.
+
+This is like [method@Pango.FontDescription.set_features], except
+that no copy of @featuresis made. The caller must make sure that
+the string passed in stays around until @desc has been freed
+or the name is set again. This function can be used if
+@features is a static string such as a C string literal,
+or if @desc is only needed temporarily.</doc>
+        <return-value transfer-ownership="none">
+          <type name="none" c:type="void"/>
+        </return-value>
+        <parameters>
+          <instance-parameter name="desc" transfer-ownership="none">
+            <doc xml:space="preserve">a `PangoFontDescription`</doc>
+            <type name="FontDescription" c:type="PangoFontDescription*"/>
+          </instance-parameter>
+          <parameter name="features" transfer-ownership="none">
+            <doc xml:space="preserve">a string representing the features</doc>
+            <type name="utf8" c:type="const char*"/>
+          </parameter>
+        </parameters>
+      </method>
       <method name="set_gravity" c:identifier="pango_font_description_set_gravity" version="1.16">
         <doc xml:space="preserve">Sets the gravity field of a font description.
 
@@ -3803,15 +3884,13 @@ The unset fields will get back to their default values.</doc>
 
 The string must have the form
 
-    "[FAMILY-LIST] [STYLE-OPTIONS] [SIZE] [VARIATIONS]",
+    [FAMILY-LIST] [STYLE-OPTIONS] [SIZE] [VARIATIONS] [FEATURES]
 
 where FAMILY-LIST is a comma-separated list of families optionally
 terminated by a comma, STYLE_OPTIONS is a whitespace-separated list
 of words where each word describes one of style, variant, weight,
 stretch, or gravity, and SIZE is a decimal number (size in points)
 or optionally followed by the unit modifier "px" for absolute size.
-VARIATIONS is a comma-separated list of font variation
-specifications of the form @&#x200D;axis=value (the = sign is optional).
 
 The following words are understood as styles:
 "Normal", "Roman", "Oblique", "Italic".
@@ -3834,6 +3913,13 @@ The following words are understood as gravity values:
 "Not-Rotated", "South", "Upside-Down", "North", "Rotated-Left",
 "East", "Rotated-Right", "West".
 
+VARIATIONS is a comma-separated list of font variations
+of the form @&#x200D;axis1=value,axis2=value,...
+
+FEATURES is a comma-separated list of font features of the form
+\#&#x200D;feature1=value,feature2=value,...
+The =value part can be ommitted if the value is 1.
+
 Any one of the options may be absent. If FAMILY-LIST is absent, then
 the family_name field of the resulting font description will be
 initialized to %NULL. If STYLE-OPTIONS is missing, then all style
@@ -3842,7 +3928,7 @@ size in the resulting font description will be set to 0.
 
 A typical example:
 
-    "Cantarell Italic Light 15 @&#x200D;wght=200"</doc>
+    Cantarell Italic Light 15 @&#x200D;wght=200 #&#x200D;tnum=1</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a new `PangoFontDescription`.</doc>
           <type name="FontDescription" c:type="PangoFontDescription*"/>
@@ -4861,10 +4947,14 @@ a font matching @desc.</doc>
         </parameters>
       </method>
       <method name="reload_font" c:identifier="pango_font_map_reload_font" version="1.52">
-        <doc xml:space="preserve">Returns a new font that is like @font, except that its size
-is multiplied by @scale, its backend-dependent configuration
-(e.g. cairo font options) is replaced by the one in @context,
-and its variations are replaced by @variations.</doc>
+        <doc xml:space="preserve">Returns a new font that is like @font, except that it is scaled
+by @scale, its backend-dependent configuration (e.g. cairo font options)
+is replaced by the one in @context, and its variations are replaced
+by @variations.
+
+Note that the scaling here is meant to be linear, so this
+scaling can be used to render a font on a hi-dpi display
+without changing its optical size.</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">the modified font</doc>
           <type name="Font" c:type="PangoFont*"/>
@@ -5082,11 +5172,14 @@ See pango_font_map_get_serial().</doc>
       <member name="size" value="32" c:identifier="PANGO_FONT_MASK_SIZE" glib:nick="size" glib:name="PANGO_FONT_MASK_SIZE">
         <doc xml:space="preserve">the font size is specified.</doc>
       </member>
-      <member name="gravity" value="64" c:identifier="PANGO_FONT_MASK_GRAVITY" glib:nick="gravity" glib:name="PANGO_FONT_MASK_GRAVITY">
-        <doc xml:space="preserve">the font gravity is specified (Since: 1.16.)</doc>
+      <member name="gravity" value="64" c:identifier="PANGO_FONT_MASK_GRAVITY" version="1.16" glib:nick="gravity" glib:name="PANGO_FONT_MASK_GRAVITY">
+        <doc xml:space="preserve">The font gravity is specified.</doc>
       </member>
-      <member name="variations" value="128" c:identifier="PANGO_FONT_MASK_VARIATIONS" glib:nick="variations" glib:name="PANGO_FONT_MASK_VARIATIONS">
-        <doc xml:space="preserve">OpenType font variations are specified (Since: 1.42)</doc>
+      <member name="variations" value="128" c:identifier="PANGO_FONT_MASK_VARIATIONS" version="1.42" glib:nick="variations" glib:name="PANGO_FONT_MASK_VARIATIONS">
+        <doc xml:space="preserve">OpenType font variations are specified.</doc>
+      </member>
+      <member name="features" value="256" c:identifier="PANGO_FONT_MASK_FEATURES" version="1.56" glib:nick="features" glib:name="PANGO_FONT_MASK_FEATURES">
+        <doc xml:space="preserve">OpenType font features are specified.</doc>
       </member>
     </bitfield>
     <record name="FontMetrics" c:type="PangoFontMetrics" glib:type-name="PangoFontMetrics" glib:get-type="pango_font_metrics_get_type" c:symbol-prefix="font_metrics">
@@ -5794,7 +5887,7 @@ as one of the elements in the list.</doc>
           </type>
         </return-value>
         <parameters>
-          <instance-parameter name="glyph_item" transfer-ownership="none">
+          <instance-parameter name="glyph_item" transfer-ownership="full">
             <doc xml:space="preserve">a shaped item</doc>
             <type name="GlyphItem" c:type="PangoGlyphItem*"/>
           </instance-parameter>
@@ -5855,10 +5948,11 @@ See also [method@Pango.GlyphString.get_logical_widths].</doc>
   start of @text)</doc>
             <type name="utf8" c:type="const char*"/>
           </parameter>
-          <parameter name="logical_widths" transfer-ownership="none">
-            <doc xml:space="preserve">an array whose length is the number of
-  characters in glyph_item (equal to glyph_item-&gt;item-&gt;num_chars)
-  to be filled in with the resulting character widths.</doc>
+          <parameter name="logical_widths" direction="out" caller-allocates="1" transfer-ownership="none">
+            <doc xml:space="preserve">an array whose length
+  is the number of characters in glyph_item (equal to
+  `glyph_item-&gt;item-&gt;num_chars`) to be filled in with the resulting
+  character widths.</doc>
             <array zero-terminated="0" c:type="int*">
               <type name="gint" c:type="int"/>
             </array>
@@ -6258,10 +6352,11 @@ See also [method@Pango.GlyphItem.get_logical_widths].</doc>
             <doc xml:space="preserve">the embedding level of the string</doc>
             <type name="gint" c:type="int"/>
           </parameter>
-          <parameter name="logical_widths" transfer-ownership="none">
-            <doc xml:space="preserve">an array whose length is the number of
-  characters in text (equal to `g_utf8_strlen (text, length)` unless
-  text has `NUL` bytes) to be filled in with the resulting character widths.</doc>
+          <parameter name="logical_widths" direction="out" caller-allocates="1" transfer-ownership="none">
+            <doc xml:space="preserve">an array whose length is
+  the number of characters in text (equal to `g_utf8_strlen (text, length)`
+  unless text has `NUL` bytes) to be filled in with the resulting character
+  widths.</doc>
             <array zero-terminated="0" c:type="int*">
               <type name="gint" c:type="int"/>
             </array>
@@ -6327,7 +6422,7 @@ into equal portions, otherwise.
   or end (%TRUE) of the character.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </parameter>
-          <parameter name="x_pos" direction="out" caller-allocates="0" transfer-ownership="full">
+          <parameter name="x_pos" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
             <doc xml:space="preserve">location to store result</doc>
             <type name="gint" c:type="int*"/>
           </parameter>
@@ -6373,7 +6468,7 @@ clusters.</doc>
   or end (%TRUE) of the character.</doc>
             <type name="gboolean" c:type="gboolean"/>
           </parameter>
-          <parameter name="x_pos" direction="out" caller-allocates="0" transfer-ownership="full">
+          <parameter name="x_pos" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
             <doc xml:space="preserve">location to store result</doc>
             <type name="gint" c:type="int*"/>
           </parameter>
@@ -6427,13 +6522,15 @@ attributes for the text to compute the valid cursor position.</doc>
             <doc xml:space="preserve">the x offset (in Pango units)</doc>
             <type name="gint" c:type="int"/>
           </parameter>
-          <parameter name="index_" direction="out" caller-allocates="0" transfer-ownership="full">
-            <doc xml:space="preserve">location to store calculated byte index within @text</doc>
+          <parameter name="index_" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+            <doc xml:space="preserve">location to store calculated byte index
+  within @text</doc>
             <type name="gint" c:type="int*"/>
           </parameter>
-          <parameter name="trailing" direction="out" caller-allocates="0" transfer-ownership="full">
-            <doc xml:space="preserve">location to store a boolean indicating whether the
-  user clicked on the leading or trailing edge of the character</doc>
+          <parameter name="trailing" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+            <doc xml:space="preserve">location to store a boolean indicating
+  whether the user clicked on the leading or trailing edge of the
+  character</doc>
             <type name="gint" c:type="int*"/>
           </parameter>
         </parameters>
@@ -8014,7 +8111,6 @@ ellipsized.</doc>
         <doc xml:space="preserve">Queries whether the layout had to wrap any paragraphs.
 
 This returns %TRUE if a positive width is set on @layout,
-ellipsization mode of @layout is set to %PANGO_ELLIPSIZE_NONE,
 and there are paragraphs exceeding the layout width that have
 to be wrapped.</doc>
         <return-value transfer-ownership="none">
@@ -8572,7 +8668,7 @@ not clear attributes.</doc>
       </method>
       <method name="set_width" c:identifier="pango_layout_set_width">
         <doc xml:space="preserve">Sets the width to which the lines of the `PangoLayout` should wrap or
-ellipsized.
+get ellipsized.
 
 The default value is -1: no width set.</doc>
         <return-value transfer-ownership="none">
@@ -11614,12 +11710,14 @@ values.</doc>
             <doc xml:space="preserve">a `PangoScriptIter`</doc>
             <type name="ScriptIter" c:type="PangoScriptIter*"/>
           </instance-parameter>
-          <parameter name="start" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
-            <doc xml:space="preserve">location to store start position of the range</doc>
+          <parameter name="start" direction="out" caller-allocates="0" transfer-ownership="none" optional="1" allow-none="1">
+            <doc xml:space="preserve">location to store start
+  position of the range</doc>
             <type name="utf8" c:type="const char**"/>
           </parameter>
-          <parameter name="end" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
-            <doc xml:space="preserve">location to store end position of the range</doc>
+          <parameter name="end" direction="out" caller-allocates="0" transfer-ownership="none" optional="1" allow-none="1">
+            <doc xml:space="preserve">location to store end position
+  of the range</doc>
             <type name="utf8" c:type="const char**"/>
           </parameter>
           <parameter name="script" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
@@ -12027,12 +12125,22 @@ pixels.</doc>
       <method name="to_string" c:identifier="pango_tab_array_to_string" version="1.50">
         <doc xml:space="preserve">Serializes a `PangoTabArray` to a string.
 
-No guarantees are made about the format of the string,
-it may change between Pango versions.
+In the resulting string, serialized tabs are separated by newlines or commas.
 
-The intended use of this function is testing and
-debugging. The format is not meant as a permanent
-storage format.</doc>
+Individual tabs are serialized to a string of the form
+
+    [ALIGNMENT:]POSITION[:DECIMAL_POINT]
+
+Where ALIGNMENT is one of _left_, _right_, _center_ or _decimal_, and
+POSITION is the position of the tab, optionally followed by the unit _px_.
+If ALIGNMENT is omitted, it defaults to _left_. If ALIGNMENT is _decimal_,
+the DECIMAL_POINT character may be specified as a Unicode codepoint.
+
+Note that all tabs in the array must use the same unit.
+
+A typical example:
+
+    100px 200px center:300px right:400px</doc>
         <return-value transfer-ownership="full">
           <doc xml:space="preserve">a newly allocated string</doc>
           <type name="utf8" c:type="char*"/>
@@ -12185,7 +12293,7 @@ Two encoded version numbers can be compared as integers.</doc>
       <doc xml:space="preserve">The major component of the version of Pango available at compile-time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_MICRO" value="0" c:type="PANGO_VERSION_MICRO">
+    <constant name="VERSION_MICRO" value="4" c:type="PANGO_VERSION_MICRO">
       <doc xml:space="preserve">The micro component of the version of Pango available at compile-time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
@@ -12193,7 +12301,7 @@ Two encoded version numbers can be compared as integers.</doc>
       <doc xml:space="preserve">The minor component of the version of Pango available at compile-time.</doc>
       <type name="gint" c:type="gint"/>
     </constant>
-    <constant name="VERSION_STRING" value="1.56.0" c:type="PANGO_VERSION_STRING">
+    <constant name="VERSION_STRING" value="1.56.4" c:type="PANGO_VERSION_STRING">
       <doc xml:space="preserve">A string literal containing the version of Pango available at compile-time.</doc>
       <type name="utf8" c:type="gchar*"/>
     </constant>
@@ -12288,6 +12396,9 @@ segmentation algorithm.</doc>
       <member name="word_char" value="2" c:identifier="PANGO_WRAP_WORD_CHAR" glib:nick="word-char" glib:name="PANGO_WRAP_WORD_CHAR">
         <doc xml:space="preserve">wrap lines at word boundaries, but fall back to
   character boundaries if there is not enough space for a full word.</doc>
+      </member>
+      <member name="none" value="3" c:identifier="PANGO_WRAP_NONE" version="1.56" glib:nick="none" glib:name="PANGO_WRAP_NONE">
+        <doc xml:space="preserve">do not wrap.</doc>
       </member>
     </enumeration>
     <function name="attr_allow_breaks_new" c:identifier="pango_attr_allow_breaks_new" version="1.44">
@@ -12396,9 +12507,9 @@ by [func@Pango.default_break] and [func@Pango.tailor_break].</doc>
           <doc xml:space="preserve">Byte offset of @text from the beginning of the paragraph</doc>
           <type name="gint" c:type="int"/>
         </parameter>
-        <parameter name="attrs" transfer-ownership="none">
-          <doc xml:space="preserve">array with one `PangoLogAttr`
-  per character in @text, plus one extra, to be filled in</doc>
+        <parameter name="attrs" direction="out" caller-allocates="1" transfer-ownership="none">
+          <doc xml:space="preserve">array with one
+  `PangoLogAttr` per character in @text, plus one extra, to be filled in</doc>
           <array length="5" zero-terminated="0" c:type="PangoLogAttr*">
             <type name="LogAttr" c:type="PangoLogAttr"/>
           </array>
@@ -13113,8 +13224,9 @@ For most purposes you may want to use [func@Pango.get_log_attrs].</doc>
           <doc xml:space="preserve">`PangoAnalysis` structure for @text</doc>
           <type name="Analysis" c:type="PangoAnalysis*"/>
         </parameter>
-        <parameter name="attrs" transfer-ownership="none">
-          <doc xml:space="preserve">an array to store character information in</doc>
+        <parameter name="attrs" direction="out" caller-allocates="1" transfer-ownership="none">
+          <doc xml:space="preserve">an array to
+  store character information in</doc>
           <array length="4" zero-terminated="0" c:type="PangoLogAttr*">
             <type name="LogAttr" c:type="PangoLogAttr"/>
           </array>
@@ -13151,9 +13263,12 @@ See [func@Pango.attr_break] for attribute-based customization.</doc>
           <doc xml:space="preserve">a `PangoAnalysis` structure for the @text</doc>
           <type name="Analysis" c:type="PangoAnalysis*"/>
         </parameter>
-        <parameter name="attrs" transfer-ownership="none">
-          <doc xml:space="preserve">logical attributes to fill in</doc>
-          <type name="LogAttr" c:type="PangoLogAttr*"/>
+        <parameter name="attrs" direction="out" caller-allocates="1" transfer-ownership="none">
+          <doc xml:space="preserve">logical
+  attributes to fill in</doc>
+          <array length="4" zero-terminated="0" c:type="PangoLogAttr*">
+            <type name="LogAttr" c:type="PangoLogAttr"/>
+          </array>
         </parameter>
         <parameter name="attrs_len" transfer-ownership="none">
           <doc xml:space="preserve">size of the array passed as @attrs</doc>
@@ -13183,11 +13298,11 @@ as @nearest.</doc>
         <type name="none" c:type="void"/>
       </return-value>
       <parameters>
-        <parameter name="inclusive" transfer-ownership="none" nullable="1" allow-none="1">
+        <parameter name="inclusive" direction="inout" caller-allocates="0" transfer-ownership="full" optional="1">
           <doc xml:space="preserve">rectangle to round to pixels inclusively</doc>
           <type name="Rectangle" c:type="PangoRectangle*"/>
         </parameter>
-        <parameter name="nearest" transfer-ownership="none" nullable="1" allow-none="1">
+        <parameter name="nearest" direction="inout" caller-allocates="0" transfer-ownership="full" optional="1">
           <doc xml:space="preserve">rectangle to round to nearest pixels</doc>
           <type name="Rectangle" c:type="PangoRectangle*"/>
         </parameter>
@@ -13239,14 +13354,14 @@ and @next_paragraph_start are filled with the length of @text
           <doc xml:space="preserve">length of @text in bytes, or -1 if nul-terminated</doc>
           <type name="gint" c:type="int"/>
         </parameter>
-        <parameter name="paragraph_delimiter_index" direction="out" caller-allocates="0" transfer-ownership="full">
-          <doc xml:space="preserve">return location for index of
-  delimiter</doc>
+        <parameter name="paragraph_delimiter_index" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+          <doc xml:space="preserve">return location
+ for index of delimiter</doc>
           <type name="gint" c:type="int*"/>
         </parameter>
-        <parameter name="next_paragraph_start" direction="out" caller-allocates="0" transfer-ownership="full">
-          <doc xml:space="preserve">return location for start of next
-  paragraph</doc>
+        <parameter name="next_paragraph_start" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
+          <doc xml:space="preserve">return location for
+ start of next paragraph</doc>
           <type name="gint" c:type="int*"/>
         </parameter>
       </parameters>
@@ -13256,15 +13371,13 @@ and @next_paragraph_start are filled with the length of @text
 
 The string must have the form
 
-    "[FAMILY-LIST] [STYLE-OPTIONS] [SIZE] [VARIATIONS]",
+    [FAMILY-LIST] [STYLE-OPTIONS] [SIZE] [VARIATIONS] [FEATURES]
 
 where FAMILY-LIST is a comma-separated list of families optionally
 terminated by a comma, STYLE_OPTIONS is a whitespace-separated list
 of words where each word describes one of style, variant, weight,
 stretch, or gravity, and SIZE is a decimal number (size in points)
 or optionally followed by the unit modifier "px" for absolute size.
-VARIATIONS is a comma-separated list of font variation
-specifications of the form @&#x200D;axis=value (the = sign is optional).
 
 The following words are understood as styles:
 "Normal", "Roman", "Oblique", "Italic".
@@ -13287,6 +13400,13 @@ The following words are understood as gravity values:
 "Not-Rotated", "South", "Upside-Down", "North", "Rotated-Left",
 "East", "Rotated-Right", "West".
 
+VARIATIONS is a comma-separated list of font variations
+of the form @&#x200D;axis1=value,axis2=value,...
+
+FEATURES is a comma-separated list of font features of the form
+\#&#x200D;feature1=value,feature2=value,...
+The =value part can be ommitted if the value is 1.
+
 Any one of the options may be absent. If FAMILY-LIST is absent, then
 the family_name field of the resulting font description will be
 initialized to %NULL. If STYLE-OPTIONS is missing, then all style
@@ -13295,7 +13415,7 @@ size in the resulting font description will be set to 0.
 
 A typical example:
 
-    "Cantarell Italic Light 15 @&#x200D;wght=200"</doc>
+    Cantarell Italic Light 15 @&#x200D;wght=200 #&#x200D;tnum=1</doc>
       <return-value transfer-ownership="full">
         <doc xml:space="preserve">a new `PangoFontDescription`.</doc>
         <type name="FontDescription" c:type="PangoFontDescription*"/>
@@ -13337,9 +13457,9 @@ a word to know the word is a word).</doc>
           <doc xml:space="preserve">language tag</doc>
           <type name="Language" c:type="PangoLanguage*"/>
         </parameter>
-        <parameter name="attrs" transfer-ownership="none">
-          <doc xml:space="preserve">array with one `PangoLogAttr`
-  per character in @text, plus one extra, to be filled in</doc>
+        <parameter name="attrs" direction="out" caller-allocates="1" transfer-ownership="none">
+          <doc xml:space="preserve">array with one
+  `PangoLogAttr` per character in @text, plus one extra, to be filled in</doc>
           <array length="5" zero-terminated="0" c:type="PangoLogAttr*">
             <type name="LogAttr" c:type="PangoLogAttr"/>
           </array>
@@ -13366,7 +13486,7 @@ filled in, %FALSE otherwise</doc>
           <doc xml:space="preserve">a Unicode character</doc>
           <type name="gunichar" c:type="gunichar"/>
         </parameter>
-        <parameter name="mirrored_ch" transfer-ownership="none">
+        <parameter name="mirrored_ch" direction="out" caller-allocates="0" transfer-ownership="full" optional="1" allow-none="1">
           <doc xml:space="preserve">location to store the mirrored character</doc>
           <type name="gunichar" c:type="gunichar*"/>
         </parameter>
@@ -13681,10 +13801,13 @@ Algorithm](http://www.unicode.org/reports/tr9/).
 
 If the input base direction is a weak direction, the direction of the
 characters in the text will determine the final resolved direction.</doc>
-      <return-value transfer-ownership="none">
-        <doc xml:space="preserve">a newly allocated array of embedding levels, one item per
-  character (not byte), that should be freed using [func@GLib.free].</doc>
-        <type name="guint8" c:type="guint8*"/>
+      <return-value transfer-ownership="full">
+        <doc xml:space="preserve">a newly allocated array of embedding
+  levels, one item per character (not byte), that should be freed using
+  [func@GLib.free].</doc>
+        <array zero-terminated="0" c:type="guint8*">
+          <type name="guint8" c:type="guint8"/>
+        </array>
       </return-value>
       <parameters>
         <parameter name="text" transfer-ownership="none">
@@ -13696,7 +13819,7 @@ characters in the text will determine the final resolved direction.</doc>
   if @text is nul-terminated and the length should be calculated.</doc>
           <type name="gint" c:type="int"/>
         </parameter>
-        <parameter name="pbase_dir" transfer-ownership="none">
+        <parameter name="pbase_dir" direction="inout" caller-allocates="0" transfer-ownership="full">
           <doc xml:space="preserve">input base direction, and output resolved direction.</doc>
           <type name="Direction" c:type="PangoDirection*"/>
         </parameter>
@@ -14041,7 +14164,7 @@ Leading white space is skipped.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>
-        <parameter name="pos" direction="inout" caller-allocates="0" transfer-ownership="full">
+        <parameter name="pos" direction="inout" caller-allocates="0" transfer-ownership="none">
           <doc xml:space="preserve">in/out string position</doc>
           <type name="utf8" c:type="const char**"/>
         </parameter>
@@ -14062,7 +14185,7 @@ a literal quote. Leading white space outside of quotes is skipped.</doc>
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>
-        <parameter name="pos" direction="inout" caller-allocates="0" transfer-ownership="full">
+        <parameter name="pos" direction="inout" caller-allocates="0" transfer-ownership="none">
           <doc xml:space="preserve">in/out string position</doc>
           <type name="utf8" c:type="const char**"/>
         </parameter>
@@ -14082,7 +14205,7 @@ A word consists of [A-Za-z_] followed by zero or more
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>
-        <parameter name="pos" direction="inout" caller-allocates="0" transfer-ownership="full">
+        <parameter name="pos" direction="inout" caller-allocates="0" transfer-ownership="none">
           <doc xml:space="preserve">in/out string position</doc>
           <type name="utf8" c:type="const char**"/>
         </parameter>
@@ -14194,7 +14317,7 @@ calling [func@Pango.shape].</doc>
           <doc xml:space="preserve">`PangoAnalysis` structure from [func@Pango.itemize]</doc>
           <type name="Analysis" c:type="const PangoAnalysis*"/>
         </parameter>
-        <parameter name="glyphs" transfer-ownership="none">
+        <parameter name="glyphs" direction="out" caller-allocates="1" transfer-ownership="none">
           <doc xml:space="preserve">glyph string in which to store results</doc>
           <type name="GlyphString" c:type="PangoGlyphString*"/>
         </parameter>
@@ -14246,7 +14369,7 @@ to subtract the item offset from their indices before calling
           <doc xml:space="preserve">`PangoAnalysis` structure from [func@Pango.itemize].</doc>
           <type name="Analysis" c:type="const PangoAnalysis*"/>
         </parameter>
-        <parameter name="glyphs" transfer-ownership="none">
+        <parameter name="glyphs" direction="out" caller-allocates="1" transfer-ownership="none">
           <doc xml:space="preserve">glyph string in which to store results.</doc>
           <type name="GlyphString" c:type="PangoGlyphString*"/>
         </parameter>
@@ -14287,7 +14410,7 @@ to subtract the item offset from their indices before calling
           <doc xml:space="preserve">array of `PangoLogAttr` for @item</doc>
           <type name="LogAttr" c:type="PangoLogAttr*"/>
         </parameter>
-        <parameter name="glyphs" transfer-ownership="none">
+        <parameter name="glyphs" direction="out" caller-allocates="1" transfer-ownership="none">
           <doc xml:space="preserve">glyph string in which to store results</doc>
           <type name="GlyphString" c:type="PangoGlyphString*"/>
         </parameter>
@@ -14342,7 +14465,7 @@ to subtract the item offset from their indices before calling
           <doc xml:space="preserve">`PangoAnalysis` structure from [func@Pango.itemize]</doc>
           <type name="Analysis" c:type="const PangoAnalysis*"/>
         </parameter>
-        <parameter name="glyphs" transfer-ownership="none">
+        <parameter name="glyphs" direction="out" caller-allocates="1" transfer-ownership="none">
           <doc xml:space="preserve">glyph string in which to store results</doc>
           <type name="GlyphString" c:type="PangoGlyphString*"/>
         </parameter>
@@ -14360,7 +14483,7 @@ to subtract the item offset from their indices before calling
         <type name="gboolean" c:type="gboolean"/>
       </return-value>
       <parameters>
-        <parameter name="pos" direction="inout" caller-allocates="0" transfer-ownership="full">
+        <parameter name="pos" direction="inout" caller-allocates="0" transfer-ownership="none">
           <doc xml:space="preserve">in/out string position</doc>
           <type name="utf8" c:type="const char**"/>
         </parameter>
@@ -14430,9 +14553,9 @@ to apply attributes to the whole paragraph.</doc>
   paragraph, or -1 to ignore attributes from @analysis</doc>
           <type name="gint" c:type="int"/>
         </parameter>
-        <parameter name="attrs" transfer-ownership="none">
-          <doc xml:space="preserve">array with one `PangoLogAttr`
-  per character in @text, plus one extra, to be filled in</doc>
+        <parameter name="attrs" direction="out" caller-allocates="1" transfer-ownership="none">
+          <doc xml:space="preserve">array with one
+  `PangoLogAttr` per character in @text, plus one extra, to be filled in</doc>
           <array length="5" zero-terminated="0" c:type="PangoLogAttr*">
             <type name="LogAttr" c:type="PangoLogAttr"/>
           </array>
